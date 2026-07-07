@@ -328,6 +328,23 @@ function makeAnimator(step) {
   return a;
 }
 
+/* 可见光波长(nm) → CSS 颜色 */
+function waveColor(nm) {
+  nm = Math.max(380, Math.min(780, nm));
+  let r = 0, g = 0, b = 0;
+  if (nm < 440) { r = (440 - nm) / 60; b = 1; }
+  else if (nm < 490) { g = (nm - 440) / 50; b = 1; }
+  else if (nm < 510) { g = 1; b = (510 - nm) / 20; }
+  else if (nm < 580) { r = (nm - 510) / 70; g = 1; }
+  else if (nm < 645) { r = 1; g = (645 - nm) / 65; }
+  else { r = 1; }
+  let f = 1;
+  if (nm > 700) f = 0.35 + 0.65 * (780 - nm) / 80;
+  else if (nm < 420) f = 0.35 + 0.65 * (nm - 380) / 40;
+  const c = v => Math.round(255 * Math.pow(v * f, 0.8));
+  return `rgb(${c(r)},${c(g)},${c(b)})`;
+}
+
 /* 播放/暂停 + 重置按钮 */
 function addPlayControls(panel, anim, { onReset } = {}) {
   const row = h('div', 'btn-row');
