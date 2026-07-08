@@ -3,13 +3,16 @@
 registerTopic({
   id: 'complex', cat: 'math', icon: '🌌',
   title: '复数与复平面', en: 'Complex Numbers',
-  desc: '在复平面上调整 z₁、z₂，看复数乘法的几何本质：模相乘、辐角相加（旋转+缩放）。',
+  desc: L('在复平面上调整 z₁、z₂，看复数乘法的几何本质：模相乘、辐角相加（旋转+缩放）。',
+          'Adjust z₁ and z₂ on the complex plane and see what multiplication really is: multiply moduli, add arguments (rotate + scale).'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '复数与复平面', en: 'Complex Numbers & the Complex Plane',
-      tagline: '紫色的 z₁·z₂ 是把 z₁ 旋转 θ₂ 再放大 r₂ 倍 —— 乘法就是“旋转 + 缩放”。',
-      formula: 'z = a + bi　·　|z| = √(a²+b²)　·　z₁z₂：模相乘 r₁r₂，辐角相加 θ₁+θ₂',
-      explainHTML: `
+      tagline: L('紫色的 z₁·z₂ 是把 z₁ 旋转 θ₂ 再放大 r₂ 倍 —— 乘法就是”旋转 + 缩放”。',
+                 'The purple z₁·z₂ is z₁ rotated by θ₂ and scaled by r₂ — multiplication is “rotate + scale”.'),
+      formula: L('z = a + bi　·　|z| = √(a²+b²)　·　z₁z₂：模相乘 r₁r₂，辐角相加 θ₁+θ₂',
+                 'z = a + bi　·　|z| = √(a²+b²)　·　z₁z₂: moduli multiply (r₁r₂), arguments add (θ₁+θ₂)'),
+      explainHTML: L(`
         <h2>什么是复数 <span class="en">What are Complex Numbers</span></h2>
         <p>为了让 x² = −1 有解，引入<span class="term">虚数单位 <span class="en">(imaginary unit)</span></span> i，规定 i² = −1。
         形如 z = a + bi 的数叫<span class="term">复数 <span class="en">(complex number)</span></span>，a 是实部 (real part)，b 是虚部 (imaginary part)。</p>
@@ -27,14 +30,32 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 把 z₂ 设为模 1、辐角 90°（即 z₂ = i），看 z₁·z₂ 正好是 z₁ 逆时针转 90°；② 把 z₂ 辐角调到 180°、模调到 1，乘积正好是 −z₁；③ 让两个辐角之和超过 180°，验证辐角“相加”依然成立。</div>
         <div class="think"><b>思考一下：</b>如果 z 的模是 1，那么 z, z², z³, … 在复平面上画出什么图形？（提示：单位圆上的旋转）</div>
-      `
+      `, `
+        <h2>What Are Complex Numbers <span class="en">什么是复数</span></h2>
+        <p>To give x² = −1 a solution, we introduce the <span class="term">imaginary unit <span class="en">(虚数单位)</span></span> i, with i² = −1.
+        A number of the form z = a + bi is a <span class="term">complex number <span class="en">(复数)</span></span>: a is the real part, b the imaginary part.</p>
+        <div class="formula">z = a + bi ⟷ the point (a, b) on the complex plane　　|z| = √(a² + b²)</div>
+        <p>Complex numbers correspond one-to-one with points of the <span class="term">complex plane <span class="en">(复平面)</span></span> — real axis horizontal, imaginary axis vertical. A complex number is essentially a "two-dimensional number".</p>
+        <h2>Polar Form &amp; Multiplication <span class="en">三角形式与乘法</span></h2>
+        <div class="formula">z = r(cos θ + i·sin θ)
+          <span class="note">r = |z| is the modulus (模), θ the argument (辐角)</span></div>
+        <div class="formula">z₁·z₂ = r₁r₂[cos(θ₁+θ₂) + i·sin(θ₁+θ₂)]
+          <span class="note">moduli multiply, arguments add — multiplying by a complex number rotates by θ₂ and scales by r₂</span></div>
+        <ul>
+          <li>Multiplying by i is a 90° counterclockwise rotation (i has modulus 1, argument 90°) — so i² = rotate 180° = −1. Geometrically obvious!</li>
+          <li>Addition still follows the parallelogram rule (just like vectors);</li>
+          <li>The <span class="term">conjugate <span class="en">(共轭复数)</span></span> z̄ = a − bi mirrors z across the real axis, and z·z̄ = |z|².</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Set z₂ to modulus 1, argument 90° (that's z₂ = i) — the product is exactly z₁ turned 90° counterclockwise; ② Set z₂'s argument to 180° with modulus 1: the product is −z₁; ③ Let the two arguments sum past 180° and check that "arguments add" still holds.</div>
+        <div class="think"><b>Think about it:</b> If |z| = 1, what shape do z, z², z³, … trace on the complex plane? (Hint: rotation around the unit circle.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const sr1 = addSlider(panel, { label: '|z₁| 模', en: 'modulus', min: 0.3, max: 3, step: 0.1, value: 2 });
-    const st1 = addSlider(panel, { label: 'z₁ 辐角 θ₁', en: 'argument', min: 0, max: 360, step: 1, value: 30, unit: '°' });
-    const sr2 = addSlider(panel, { label: '|z₂| 模', en: 'modulus', min: 0.3, max: 3, step: 0.1, value: 1.4 });
-    const st2 = addSlider(panel, { label: 'z₂ 辐角 θ₂', en: 'argument', min: 0, max: 360, step: 1, value: 60, unit: '°' });
+    const sr1 = addSlider(panel, { label: L('|z₁| 模', 'Modulus |z₁|'), en: L('modulus', '模'), min: 0.3, max: 3, step: 0.1, value: 2 });
+    const st1 = addSlider(panel, { label: L('z₁ 辐角 θ₁', 'Argument θ₁'), en: L('argument', '辐角'), min: 0, max: 360, step: 1, value: 30, unit: '°' });
+    const sr2 = addSlider(panel, { label: L('|z₂| 模', 'Modulus |z₂|'), en: L('modulus', '模'), min: 0.3, max: 3, step: 0.1, value: 1.4 });
+    const st2 = addSlider(panel, { label: L('z₂ 辐角 θ₂', 'Argument θ₂'), en: L('argument', '辐角'), min: 0, max: 360, step: 1, value: 60, unit: '°' });
     const readout = addReadout(panel);
 
     function draw() {
@@ -69,14 +90,21 @@ registerTopic({
       ctx.restore();
       const fmtZ = z => `${fmtN(z[0],2)} ${z[1] >= 0 ? '+' : '−'} ${fmtN(Math.abs(z[1]),2)}i`;
       const argP = ((st1.value + st2.value) % 360);
-      readout.set(`
+      readout.set(L(`
         z₁ = <b>${fmtZ(z1)}</b><br>
         z₂ = <b>${fmtZ(z2)}</b><br>
         z₁ + z₂ = <b>${fmtZ(zs)}</b>（平行四边形法则）<br>
         z₁ · z₂ = <b style="color:${C.purple}">${fmtZ(zp)}</b><br>
         |z₁z₂| = r₁r₂ = <b>${fmtN(r1*r2,3)}</b> ✓<br>
         arg(z₁z₂) = θ₁+θ₂ = <b>${fmtN(argP,0)}°</b> ✓
-        ${Math.abs(r2 - 1) < 0.05 && Math.abs(st2.value - 90) < 2 ? '<br><span class="tag">z₂ ≈ i：乘 i = 逆时针转 90°！</span>' : ''}`);
+        ${Math.abs(r2 - 1) < 0.05 && Math.abs(st2.value - 90) < 2 ? '<br><span class="tag">z₂ ≈ i：乘 i = 逆时针转 90°！</span>' : ''}`, `
+        z₁ = <b>${fmtZ(z1)}</b><br>
+        z₂ = <b>${fmtZ(z2)}</b><br>
+        z₁ + z₂ = <b>${fmtZ(zs)}</b> (parallelogram rule)<br>
+        z₁ · z₂ = <b style="color:${C.purple}">${fmtZ(zp)}</b><br>
+        |z₁z₂| = r₁r₂ = <b>${fmtN(r1*r2,3)}</b> ✓<br>
+        arg(z₁z₂) = θ₁+θ₂ = <b>${fmtN(argP,0)}°</b> ✓
+        ${Math.abs(r2 - 1) < 0.05 && Math.abs(st2.value - 90) < 2 ? '<br><span class="tag">z₂ ≈ i: multiplying by i = rotate 90° CCW!</span>' : ''}`));
     }
     [sr1, st1, sr2, st2].forEach(s => s.onChange(draw));
     cv.onResize(draw);

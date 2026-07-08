@@ -3,13 +3,16 @@
 registerTopic({
   id: 'sequence', cat: 'math', icon: '🪜',
   title: '数列：等差与等比', en: 'Arithmetic & Geometric',
-  desc: '调整首项与公差/公比，看数列的"形状"：等差是直线，等比是指数爆炸或衰减。',
+  desc: L('调整首项与公差/公比，看数列的"形状"：等差是直线，等比是指数爆炸或衰减。',
+          'Tune the first term and common difference/ratio to see a sequence\'s "shape": arithmetic is a line, geometric explodes or decays.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '数列：等差与等比', en: 'Arithmetic & Geometric Sequences',
-      tagline: '左边是数列的前 12 项（柱状），观察等差数列的"直线感"和等比数列的"爆炸感"。',
-      formula: '等差：a<sub>n</sub> = a₁ + (n−1)d　·　等比：a<sub>n</sub> = a₁·q<sup>n−1</sup>',
-      explainHTML: `
+      tagline: L('左边是数列的前 12 项（柱状），观察等差数列的"直线感"和等比数列的"爆炸感"。',
+                 'The chart shows the first 12 terms. Feel the "straight-line" of arithmetic vs. the "explosion" of geometric sequences.'),
+      formula: L('等差：a<sub>n</sub> = a₁ + (n−1)d　·　等比：a<sub>n</sub> = a₁·q<sup>n−1</sup>',
+                 'Arithmetic: a<sub>n</sub> = a₁ + (n−1)d　·　Geometric: a<sub>n</sub> = a₁·q<sup>n−1</sup>'),
+      explainHTML: L(`
         <h2>等差数列 <span class="en">Arithmetic Sequence</span></h2>
         <p>从第二项起，每项与前一项的<b>差</b>为同一常数 d（<span class="term">公差 <span class="en">(common difference)</span></span>）：</p>
         <div class="formula">a<sub>n</sub> = a₁ + (n−1)d　　S<sub>n</sub> = <span class="frac"><span>n(a₁ + a<sub>n</sub>)</span><span class="den">2</span></span> = na₁ + <span class="frac"><span>n(n−1)</span><span class="den">2</span></span>d</div>
@@ -27,21 +30,40 @@ registerTopic({
           <li>q &lt; 0：正负交替振荡。</li>
         </ul>
         <div class="tip"><b>实验建议：</b>① 等差模式下改变 d 的正负，柱顶连线的"斜率"如何变？② 切到等比，q = 0.5，看 Sₙ 读数逐渐逼近 a₁/(1−q) = 2a₁，却永远到不了 —— 这就是极限；③ q = −0.8 试试振荡衰减。</div>
-        <div class="think"><b>思考一下：</b>“一尺之棰，日取其半，万世不竭”说的是哪种数列？棋盘放麦粒（每格翻倍）又是哪种？为什么后者会让国王破产？</div>
-      `
+        <div class=”think”><b>思考一下：</b>”一尺之棰，日取其半，万世不竭”说的是哪种数列？棋盘放麦粒（每格翻倍）又是哪种？为什么后者会让国王破产？</div>
+      `, `
+        <h2>Arithmetic Sequences <span class=”en”>等差数列</span></h2>
+        <p>From the second term on, each term differs from the previous one by the same constant d (the <span class=”term”>common difference <span class=”en”>(公差)</span></span>):</p>
+        <div class=”formula”>a<sub>n</sub> = a₁ + (n−1)d　　S<sub>n</sub> = <span class=”frac”><span>n(a₁ + a<sub>n</sub>)</span><span class=”den”>2</span></span> = na₁ + <span class=”frac”><span>n(n−1)</span><span class=”den”>2</span></span>d</div>
+        <ul>
+          <li>Graph signature: the points lie on a <b>straight line</b> (aₙ is linear in n; slope = d);</li>
+          <li>Where the sum formula comes from: Gauss adding 1+2+…+100 — pair first with last, each pair makes 101, fifty pairs;</li>
+          <li>Arithmetic middle term: 2a<sub>n</sub> = a<sub>n−1</sub> + a<sub>n+1</sub>.</li>
+        </ul>
+        <h2>Geometric Sequences <span class=”en”>等比数列</span></h2>
+        <p>From the second term on, each term is the previous one times the same constant q (the <span class=”term”>common ratio <span class=”en”>(公比)</span></span>, q ≠ 0):</p>
+        <div class=”formula”>a<sub>n</sub> = a₁·q<sup>n−1</sup>　　S<sub>n</sub> = <span class=”frac”><span>a₁(1 − q<sup>n</sup>)</span><span class=”den”>1 − q</span></span>（q ≠ 1）</div>
+        <ul>
+          <li>Graph signature: the points lie on an <b>exponential curve</b> — same family as exponential functions;</li>
+          <li>|q| &gt; 1: exponential growth (explosion); 0 &lt; |q| &lt; 1: exponential decay, and as n → ∞, S<sub>n</sub> → <span class=”frac”><span>a₁</span><span class=”den”>1−q</span></span> (sum of an infinite geometric series);</li>
+          <li>q &lt; 0: the terms alternate in sign.</li>
+        </ul>
+        <div class=”tip”><b>Try this:</b> ① In arithmetic mode flip the sign of d — how does the “slope” of the bar tops change? ② Switch to geometric with q = 0.5 and watch Sₙ creep toward a₁/(1−q) = 2a₁ without ever reaching it — that's a limit; ③ Try q = −0.8 for oscillating decay.</div>
+        <div class=”think”><b>Think about it:</b> “Take a foot-long stick, halve it every day — it never runs out” (Zhuangzi): which sequence is that? Grains of wheat doubling on each chessboard square: which one? Why does the second bankrupt the king?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
     const mode = addSeg(panel, {
       options: [
-        { label: '等差数列 d', value: 'arith' },
-        { label: '等比数列 q', value: 'geo' }
+        { label: L('等差数列 d', 'Arithmetic d'), value: 'arith' },
+        { label: L('等比数列 q', 'Geometric q'), value: 'geo' }
       ],
       value: 'arith', onChange: () => { syncSliders(); draw(); }
     });
-    const sa1 = addSlider(panel, { label: '首项 a₁', en: 'first term', min: -5, max: 8, step: 0.5, value: 2 });
-    const sd = addSlider(panel, { label: '公差 d', en: 'common diff.', min: -3, max: 3, step: 0.1, value: 1.5 });
-    const sq = addSlider(panel, { label: '公比 q', en: 'common ratio', min: -1.6, max: 1.6, step: 0.05, value: 0.5 });
+    const sa1 = addSlider(panel, { label: L('首项 a₁', 'First term a₁'), en: L('first term', '首项'), min: -5, max: 8, step: 0.5, value: 2 });
+    const sd = addSlider(panel, { label: L('公差 d', 'Common difference d'), en: L('common diff.', '公差'), min: -3, max: 3, step: 0.1, value: 1.5 });
+    const sq = addSlider(panel, { label: L('公比 q', 'Common ratio q'), en: L('common ratio', '公比'), min: -1.6, max: 1.6, step: 0.05, value: 0.5 });
     const readout = addReadout(panel);
     const N = 12;
 
@@ -80,15 +102,15 @@ registerTopic({
       // 趋势线/曲线
       if (mode.value === 'arith') {
         plot.fn(x => sa1.value + (x - 1) * sd.value, { color: C.orange, width: 1.8, dash: [6, 5], xmin: 0.6, xmax: N + 0.4 });
-        plot.text(N - 2.6, term(N - 2.6 | 0), '点都在一条直线上', { color: C.orange, dy: -14 });
+        plot.text(N - 2.6, term(N - 2.6 | 0), L('点都在一条直线上', 'points lie on a line'), { color: C.orange, dy: -14 });
       } else if (sq.value > 0) {
         plot.fn(x => sa1.value * Math.pow(sq.value, x - 1), { color: C.orange, width: 1.8, dash: [6, 5], xmin: 0.6, xmax: N + 0.4 });
-        plot.text(3, term(3), '点都在指数曲线上', { color: C.orange, dy: -14 });
+        plot.text(3, term(3), L('点都在指数曲线上', 'points lie on an exponential'), { color: C.orange, dy: -14 });
       }
       function niceStepLocal(x) { return niceStep(x); }
       const q = sq.value, isGeo = mode.value === 'geo';
       const limit = isGeo && Math.abs(q) < 1 ? sa1.value / (1 - q) : null;
-      readout.set(`
+      readout.set(L(`
         ${isGeo ? `a₁ = <b>${fmtN(sa1.value,1)}</b>，q = <b>${fmtN(q,2)}</b>` : `a₁ = <b>${fmtN(sa1.value,1)}</b>，d = <b>${fmtN(sd.value,1)}</b>`}<br>
         a₅ = <b>${fmtN(term(5),3)}</b>　a₁₂ = <b>${fmtN(term(12),3)}</b><br>
         S₅ = <b>${fmtN(sum(5),3)}</b>　S₁₂ = <b>${fmtN(sum(12),3)}</b><br>
@@ -96,7 +118,15 @@ registerTopic({
           ? (Math.abs(q) < 1
               ? `|q| &lt; 1：无穷项和收敛于 <span class="frac"></span><b>a₁/(1−q) = ${fmtN(limit,3)}</b> <span class="tag">极限！</span>`
               : Math.abs(q) > 1 ? '<span class="tag">|q| &gt; 1：指数爆炸增长</span>' : 'q = ±1：特殊情形')
-          : `每项差恒为 d：a₂−a₁ = ${fmtN(term(2)-term(1),2)}，a₈−a₇ = ${fmtN(term(8)-term(7),2)} ✓`}`);
+          : `每项差恒为 d：a₂−a₁ = ${fmtN(term(2)-term(1),2)}，a₈−a₇ = ${fmtN(term(8)-term(7),2)} ✓`}`, `
+        ${isGeo ? `a₁ = <b>${fmtN(sa1.value,1)}</b>, q = <b>${fmtN(q,2)}</b>` : `a₁ = <b>${fmtN(sa1.value,1)}</b>, d = <b>${fmtN(sd.value,1)}</b>`}<br>
+        a₅ = <b>${fmtN(term(5),3)}</b>　a₁₂ = <b>${fmtN(term(12),3)}</b><br>
+        S₅ = <b>${fmtN(sum(5),3)}</b>　S₁₂ = <b>${fmtN(sum(12),3)}</b><br>
+        ${isGeo
+          ? (Math.abs(q) < 1
+              ? `|q| &lt; 1: the infinite sum converges to <span class="frac"></span><b>a₁/(1−q) = ${fmtN(limit,3)}</b> <span class="tag">a limit!</span>`
+              : Math.abs(q) > 1 ? '<span class="tag">|q| &gt; 1: exponential explosion</span>' : 'q = ±1: special case')
+          : `Constant difference d: a₂−a₁ = ${fmtN(term(2)-term(1),2)}, a₈−a₇ = ${fmtN(term(8)-term(7),2)} ✓`}`));
     }
     function niceStep(x) {
       if (!isFinite(x) || x <= 0) return 1;
