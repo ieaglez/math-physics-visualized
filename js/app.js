@@ -1,42 +1,60 @@
 'use strict';
-/* ===== 应用框架：导航 + 路由 + 首页 + 学习路径 + 进度 ===== */
+/* ===== 应用框架：导航 + 路由 + 首页 + 学习路径 + 进度 + 双语 ===== */
 
 const CATEGORIES = [
-  { id: 'math',   name: '数学 · 函数与几何',     en: 'Functions & Geometry',   color: '#7c3aed' },
-  { id: 'mech',   name: '物理 · 力学',           en: 'Mechanics',              color: '#ea580c' },
-  { id: 'optics', name: '物理 · 电磁与光学',     en: 'E&M & Optics',           color: '#0891b2' },
-  { id: 'modern', name: '物理 · 热学与近代物理', en: 'Thermo & Modern Physics', color: '#059669' }
+  { id: 'math',   name: L('数学 · 函数与几何', 'Math · Functions & Geometry'),        en: L('Functions & Geometry', '函数与几何') },
+  { id: 'mech',   name: L('物理 · 力学', 'Physics · Mechanics'),                      en: L('Mechanics', '力学') },
+  { id: 'optics', name: L('物理 · 电磁与光学', 'Physics · E&M · Optics'),             en: L('E&M & Optics', '电磁与光学') },
+  { id: 'modern', name: L('物理 · 热学与近代物理', 'Physics · Thermo & Modern'),      en: L('Thermo & Modern Physics', '热学与近代物理') }
 ];
+CATEGORIES[0].color = '#7c3aed'; CATEGORIES[1].color = '#ea580c';
+CATEGORIES[2].color = '#0891b2'; CATEGORIES[3].color = '#059669';
 
-/* ---------- 学习路径：8 站，覆盖全部专题 ---------- */
+/* ---------- 学习路径：8 站 ---------- */
 const LEARNING_PATH = [
-  { grade: '高一 · 上', title: '数学起步：从集合到函数',
-    desc: '先学会数学的"语言"（集合），再认识两类最重要的函数 —— 这是后面一切的地基。',
+  { grade: L('高一 · 上', 'Grade 10 · Fall'),
+    title: L('数学起步：从集合到函数', 'Math Foundations: Sets to Functions'),
+    desc: L('先学会数学的"语言"（集合），再认识两类最重要的函数 —— 这是后面一切的地基。',
+            'Learn the "language" of math (sets) first, then meet the two most important families of functions — the foundation for everything ahead.'),
     items: ['sets', 'quadratic', 'amgm', 'explog'] },
-  { grade: '高一 · 上', title: '物理起步：运动与力',
-    desc: '描述运动（怎么动）→ 分析受力（为什么这么动）。牛顿力学的两大支柱。',
+  { grade: L('高一 · 上', 'Grade 10 · Fall'),
+    title: L('物理起步：运动与力', 'Physics Foundations: Motion & Forces'),
+    desc: L('描述运动（怎么动）→ 分析受力（为什么这么动）。牛顿力学的两大支柱。',
+            'Describe motion (how things move), then analyze forces (why they move that way) — the two pillars of Newtonian mechanics.'),
     items: ['kinematics', 'forces', 'incline'] },
-  { grade: '高一 · 下', title: '三角与向量：旋转的数学',
-    desc: '单位圆是三角函数的家。向量和复数则把"方向"变成可以计算的对象。',
+  { grade: L('高一 · 下', 'Grade 10 · Spring'),
+    title: L('三角与向量：旋转的数学', 'Trigonometry & Vectors: The Math of Rotation'),
+    desc: L('单位圆是三角函数的家。向量和复数则把"方向"变成可以计算的对象。',
+            'The unit circle is home to the trig functions. Vectors and complex numbers turn "direction" into something you can compute with.'),
     items: ['trig', 'transform', 'triangle', 'vector', 'complex'] },
-  { grade: '高一 · 下', title: '曲线运动 · 能量 · 动量',
-    desc: '运动不再是直线：抛体、圆周、天体。再用能量和动量两大守恒律俯瞰全局。',
+  { grade: L('高一 · 下', 'Grade 10 · Spring'),
+    title: L('曲线运动 · 能量 · 动量', 'Curved Motion · Energy · Momentum'),
+    desc: L('运动不再是直线：抛体、圆周、天体。再用能量和动量两大守恒律俯瞰全局。',
+            'Motion leaves the straight line: projectiles, circles, orbits. Then survey it all through the two great conservation laws — energy and momentum.'),
     items: ['projectile', 'circular', 'gravity', 'energy', 'momentum'] },
-  { grade: '高二', title: '几何与代数进阶',
-    desc: '立体几何练空间想象；解析几何用代数"算"几何；数列和导数打开高等数学的门。',
+  { grade: L('高二', 'Grade 11'),
+    title: L('几何与代数进阶', 'Advanced Geometry & Algebra'),
+    desc: L('立体几何练空间想象；解析几何用代数"算"几何；数列和导数打开高等数学的门。',
+            'Solid geometry trains spatial thinking; analytic geometry computes shapes with algebra; sequences and derivatives open the door to higher math.'),
     items: ['solids', 'linecircle', 'ellipse', 'conics2', 'sequence', 'derivative'] },
-  { grade: '高二', title: '电与磁',
-    desc: '从静电力到电路，再到磁场和电磁感应 —— 现代文明的全部电力都从这里来。',
+  { grade: L('高二', 'Grade 11'),
+    title: L('电与磁', 'Electricity & Magnetism'),
+    desc: L('从静电力到电路，再到磁场和电磁感应 —— 现代文明的全部电力都从这里来。',
+            'From electrostatic forces to circuits, magnetic fields and induction — every watt of modern civilization starts here.'),
     items: ['coulomb', 'circuit', 'lorentz', 'induction', 'ac'] },
-  { grade: '高二 · 高三', title: '振动 · 波 · 光',
-    desc: '简谐运动是一切振动的原型，波把振动传向远方，光的干涉揭示了它的波动本性。',
+  { grade: L('高二 · 高三', 'Grade 11–12'),
+    title: L('振动 · 波 · 光', 'Oscillations · Waves · Light'),
+    desc: L('简谐运动是一切振动的原型，波把振动传向远方，光的干涉揭示了它的波动本性。',
+            'Simple harmonic motion is the prototype of all vibration; waves carry it outward; interference reveals the wave nature of light.'),
     items: ['shm', 'wave', 'refraction', 'lens', 'interference'] },
-  { grade: '高三', title: '概率统计与近代物理',
-    desc: '用分布描述随机世界；再走进 20 世纪：气体分子、光量子、原子能级。',
+  { grade: L('高三', 'Grade 12'),
+    title: L('概率统计与近代物理', 'Probability, Statistics & Modern Physics'),
+    desc: L('用分布描述随机世界；再走进 20 世纪：气体分子、光量子、原子能级。',
+            'Describe randomness with distributions, then step into the 20th century: gas molecules, light quanta, atomic energy levels.'),
     items: ['binomial', 'normal', 'gas', 'photoelectric', 'bohr'] }
 ];
 
-/* 前置知识（学某专题前建议先学的专题） */
+/* 前置知识 */
 const PREREQS = {
   amgm: ['quadratic'], explog: ['quadratic'],
   trig: ['quadratic'], transform: ['trig'], triangle: ['trig'], vector: ['trig'],
@@ -55,8 +73,10 @@ const PREREQS = {
 const PATH_ORDER = LEARNING_PATH.flatMap(s => s.items);
 const topicById = id => TOPICS.find(t => t.id === id);
 const stageIndexOf = id => LEARNING_PATH.findIndex(s => s.items.includes(id));
+const tName = t => L(t.title, t.en || t.title);
+const tSub = t => L(t.en || '', t.title);
 
-/* ---------- 学习进度（localStorage，按浏览器保存） ---------- */
+/* ---------- 学习进度 ---------- */
 const DONE_KEY = 'mpv_done_v1';
 function getDone() {
   try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || '[]')); }
@@ -76,19 +96,32 @@ const navEl = document.getElementById('nav');
 const sidebar = document.getElementById('sidebar');
 let currentCleanup = null;
 
+/* ---------- 语言切换按钮 ---------- */
+(function buildLangToggle() {
+  const box = document.getElementById('lang-toggle');
+  if (!box) return;
+  const zh = h('button', LANG === 'zh' ? 'on' : null, '中文');
+  const en = h('button', LANG === 'en' ? 'on' : null, 'English');
+  zh.onclick = () => { if (LANG !== 'zh') setLang('zh'); };
+  en.onclick = () => { if (LANG !== 'en') setLang('en'); };
+  box.append(zh, en);
+  const foot = document.getElementById('sidebar-foot');
+  if (foot) foot.textContent = L('免费 · 开源 · 适用于高中阶段', 'Free · Open Source · For High School');
+})();
+
 /* ---------- 侧边导航 ---------- */
 function buildNav() {
   navEl.innerHTML = '';
-  const home = h('a', 'nav-item', '<span class="ico">🏠</span> 课程首页 Home');
+  const home = h('a', 'nav-item', `<span class="ico">🏠</span> ${L('课程首页 Home', 'Home 首页')}`);
   home.href = '#home'; home.dataset.route = 'home';
-  const path = h('a', 'nav-item', '<span class="ico">🗺️</span> 学习路径 Path');
+  const path = h('a', 'nav-item', `<span class="ico">🗺️</span> ${L('学习路径 Path', 'Learning Path 路径')}`);
   path.href = '#path'; path.dataset.route = 'path';
   navEl.append(home, path);
   CATEGORIES.forEach(cat => {
     navEl.appendChild(h('div', 'nav-cat', cat.name));
     TOPICS.filter(t => t.cat === cat.id).forEach(t => {
       const a = h('a', 'nav-item',
-        `<span class="ico">${t.icon}</span><span class="nav-txt">${t.title}</span><span class="nav-check">✓</span>`);
+        `<span class="ico">${t.icon}</span><span class="nav-txt">${tName(t)}</span><span class="nav-check">✓</span>`);
       a.href = '#' + t.id;
       a.dataset.route = t.id;
       navEl.appendChild(a);
@@ -109,15 +142,17 @@ function renderHome(root) {
   const done = getDone();
   const total = PATH_ORDER.length;
   const pct = Math.round(done.size / total * 100);
+  const firstUndone = PATH_ORDER.find(id => !done.has(id)) || PATH_ORDER[0];
   const hero = h('div', 'home-hero', `
-    <h1>数理可视课堂 <span class="en">Interactive Math &amp; Physics for High School</span></h1>
-    <p>把高中数学与物理的核心原理变成<b>可以动手操作的图形和动画</b>：拖动滑块改变参数，
-    亲眼看到函数曲线如何变化、物体如何运动、光线如何折射。${total} 个交互专题，覆盖高一到高三的主干知识。</p>
+    <h1>${L('数理可视课堂', 'Math & Physics, Visualized')} <span class="en">${L('Interactive Math & Physics for High School', '交互式高中数学·物理可视化课堂')}</span></h1>
+    <p>${L(`把高中数学与物理的核心原理变成<b>可以动手操作的图形和动画</b>：拖动滑块改变参数，
+    亲眼看到函数曲线如何变化、物体如何运动、光线如何折射。${total} 个交互专题，覆盖高一到高三的主干知识。`,
+    `Every core idea of high-school math and physics turned into <b>graphics and animations you can play with</b>: drag a slider and watch curves reshape, objects move, and light bend — ${total} interactive topics covering Grades 10–12.`)}</p>
     <div class="hero-actions">
-      <a class="hero-btn primary" href="#path">🗺️ 从零开始 · 查看学习路径</a>
-      <a class="hero-btn" href="#${PATH_ORDER.find(id => !done.has(id)) || PATH_ORDER[0]}">▶ ${done.size ? '继续学习' : '直接开始第一课'}</a>
+      <a class="hero-btn primary" href="#path">${L('🗺️ 从零开始 · 查看学习路径', '🗺️ Start from Zero · Learning Path')}</a>
+      <a class="hero-btn" href="#${firstUndone}">▶ ${done.size ? L('继续学习', 'Continue Learning') : L('直接开始第一课', 'Jump into Lesson 1')}</a>
     </div>
-    ${done.size ? `<div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>已掌握 ${done.size}/${total} 个专题（${pct}%）</div>` : ''}
+    ${done.size ? `<div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>${L(`已掌握 ${done.size}/${total} 个专题（${pct}%）`, `${done.size}/${total} topics mastered (${pct}%)`)}</div>` : ''}
   `);
   root.appendChild(hero);
   CATEGORIES.forEach(cat => {
@@ -131,11 +166,11 @@ function renderHome(root) {
         <div class="card-top">
           <span class="ico">${t.icon}</span>
           <span class="card-badges">
-            ${si >= 0 ? `<span class="badge">第${si + 1}站·${LEARNING_PATH[si].grade}</span>` : ''}
-            ${isDone ? '<span class="badge done-badge">✓ 已掌握</span>' : ''}
+            ${si >= 0 ? `<span class="badge">${L(`第${si + 1}站·${LEARNING_PATH[si].grade}`, `Stop ${si + 1} · ${LEARNING_PATH[si].grade}`)}</span>` : ''}
+            ${isDone ? `<span class="badge done-badge">${L('✓ 已掌握', '✓ Mastered')}</span>` : ''}
           </span>
         </div>
-        <h3>${t.title}<span class="en">${t.en}</span></h3>
+        <h3>${tName(t)}<span class="en">${tSub(t)}</span></h3>
         <p>${t.desc}</p>`);
       card.href = '#' + t.id;
       grid.appendChild(card);
@@ -153,12 +188,16 @@ function renderPath(root) {
   const pct = Math.round(done.size / total * 100);
   const firstUndone = PATH_ORDER.find(id => !done.has(id));
   root.appendChild(h('div', 'home-hero', `
-    <h1>学习路径 <span class="en">A Guided Journey from Zero</span></h1>
-    <p>按下面 8 站的顺序学习，每一站都建立在前一站之上 —— 与高中教材进度（人教版）大体同步。
-    学完一个专题后，点页面底部的「✓ 标记为已掌握」，进度会保存在这台设备的浏览器里。</p>
+    <h1>${L('学习路径', 'Learning Path')} <span class="en">${L('A Guided Journey from Zero', '从零开始的系统学习路线')}</span></h1>
+    <p>${L(`按下面 8 站的顺序学习，每一站都建立在前一站之上 —— 与高中教材进度（人教版）大体同步。
+    学完一个专题后，点页面底部的「✓ 标记为已掌握」，进度会保存在这台设备的浏览器里。`,
+    `Follow the 8 stops below in order — each builds on the last, roughly matching a standard high-school sequence.
+    After finishing a topic, click “✓ Mark as mastered” at the bottom of its page; progress is saved in this browser.`)}</p>
     <div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>
-    总进度：${done.size}/${total}（${pct}%）</div>
-    ${firstUndone ? `<div class="hero-actions"><a class="hero-btn primary" href="#${firstUndone}">▶ 继续学习：${topicById(firstUndone).title}</a></div>` : '<div class="hero-actions"><span class="hero-btn primary">🎉 恭喜！全部专题已掌握</span></div>'}
+    ${L(`总进度：${done.size}/${total}（${pct}%）`, `Overall progress: ${done.size}/${total} (${pct}%)`)}</div>
+    ${firstUndone
+      ? `<div class="hero-actions"><a class="hero-btn primary" href="#${firstUndone}">▶ ${L('继续学习：', 'Continue: ')}${tName(topicById(firstUndone))}</a></div>`
+      : `<div class="hero-actions"><span class="hero-btn primary">${L('🎉 恭喜！全部专题已掌握', '🎉 Congratulations! All topics mastered')}</span></div>`}
   `));
   const wrap = h('div', 'path-wrap');
   LEARNING_PATH.forEach((stage, si) => {
@@ -181,7 +220,7 @@ function renderPath(root) {
       if (!t) return;
       const a = h('a', 'path-item' + (done.has(id) ? ' done' : ''),
         `<span class="pi-idx">${i + 1}</span><span class="pi-ico">${t.icon}</span>
-         <span class="pi-title">${t.title}<em>${t.en}</em></span>
+         <span class="pi-title">${tName(t)}<em>${tSub(t)}</em></span>
          <span class="pi-check">${done.has(id) ? '✓' : ''}</span>`);
       a.href = '#' + id;
       box.appendChild(a);
@@ -191,34 +230,37 @@ function renderPath(root) {
   root.appendChild(wrap);
 }
 
-/* ---------- 专题页底部：学习导航（前置 / 打卡 / 下一站） ---------- */
+/* ---------- 专题页底部：学习导航 ---------- */
 function appendTopicFooter(topic) {
   const done = getDone();
   const foot = h('div', 'topic-footer');
-  // 前置知识
   const pre = (PREREQS[topic.id] || []).map(id => topicById(id)).filter(Boolean);
   const idx = PATH_ORDER.indexOf(topic.id);
   const next = idx >= 0 && idx < PATH_ORDER.length - 1 ? topicById(PATH_ORDER[idx + 1]) : null;
   const si = stageIndexOf(topic.id);
+  const btnOn = L('✓ 已掌握（点击取消）', '✓ Mastered (click to undo)');
+  const btnOff = L('✓ 标记为已掌握', '✓ Mark as mastered');
   foot.innerHTML = `
     <div class="tf-row">
       <div class="tf-block">
-        <div class="tf-label">📚 学前建议掌握 PREREQUISITES</div>
+        <div class="tf-label">${L('📚 学前建议掌握 PREREQUISITES', '📚 PREREQUISITES 学前建议')}</div>
         <div class="tf-chips">${pre.length ? pre.map(p =>
-          `<a class="tf-chip ${done.has(p.id) ? 'ok' : ''}" href="#${p.id}">${done.has(p.id) ? '✓ ' : ''}${p.icon} ${p.title}</a>`).join('') :
-          '<span class="tf-none">无 —— 这是一个入门专题，直接开始吧！</span>'}</div>
+          `<a class="tf-chip ${done.has(p.id) ? 'ok' : ''}" href="#${p.id}">${done.has(p.id) ? '✓ ' : ''}${p.icon} ${tName(p)}</a>`).join('') :
+          `<span class="tf-none">${L('无 —— 这是一个入门专题，直接开始吧！', 'None — this is a starter topic. Dive right in!')}</span>`}</div>
       </div>
-      <button class="tf-done-btn ${done.has(topic.id) ? 'on' : ''}">${done.has(topic.id) ? '✓ 已掌握（点击取消）' : '✓ 标记为已掌握'}</button>
+      <button class="tf-done-btn ${done.has(topic.id) ? 'on' : ''}">${done.has(topic.id) ? btnOn : btnOff}</button>
     </div>
     <div class="tf-next">
-      ${si >= 0 ? `<a class="tf-chip" href="#path">🗺️ 返回学习路径（第 ${si + 1} 站）</a>` : ''}
-      ${next ? `<a class="tf-next-link" href="#${next.id}">下一站：${next.icon} ${next.title} →</a>` : '<span class="tf-next-link">🎓 这是路径的最后一个专题！</span>'}
+      ${si >= 0 ? `<a class="tf-chip" href="#path">${L(`🗺️ 返回学习路径（第 ${si + 1} 站）`, `🗺️ Back to Path (Stop ${si + 1})`)}</a>` : ''}
+      ${next
+        ? `<a class="tf-next-link" href="#${next.id}">${L('下一站：', 'Next: ')}${next.icon} ${tName(next)} →</a>`
+        : `<span class="tf-next-link">${L('🎓 这是路径的最后一个专题！', '🎓 This is the final topic on the path!')}</span>`}
     </div>`;
   foot.querySelector('.tf-done-btn').onclick = e => {
     toggleDone(topic.id);
     const on = getDone().has(topic.id);
     e.target.classList.toggle('on', on);
-    e.target.textContent = on ? '✓ 已掌握（点击取消）' : '✓ 标记为已掌握';
+    e.target.textContent = on ? btnOn : btnOff;
     refreshNavDone();
   };
   mainEl.appendChild(foot);
@@ -233,16 +275,17 @@ function route() {
   sidebar.classList.remove('open');
   window.scrollTo(0, 0);
   const topic = TOPICS.find(t => t.id === id);
+  const site = L('数理可视课堂', 'Math & Physics Visualized');
   if (topic) {
     currentCleanup = topic.render(mainEl) || null;
     appendTopicFooter(topic);
-    document.title = topic.title + ' · 数理可视课堂';
+    document.title = tName(topic) + ' · ' + site;
   } else if (id === 'path') {
     renderPath(mainEl);
-    document.title = '学习路径 · 数理可视课堂';
+    document.title = L('学习路径', 'Learning Path') + ' · ' + site;
   } else {
     renderHome(mainEl);
-    document.title = '数理可视课堂 · Math & Physics Visualized';
+    document.title = site + ' · ' + L('Math & Physics Visualized', '数理可视课堂');
   }
 }
 

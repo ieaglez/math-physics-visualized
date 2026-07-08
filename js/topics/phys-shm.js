@@ -3,11 +3,13 @@
 registerTopic({
   id: 'shm', cat: 'mech', icon: '🪀',
   title: '简谐运动（弹簧振子）', en: 'Simple Harmonic Motion',
-  desc: '调节劲度系数 k、质量 m 和振幅 A，观察弹簧振子的往复运动与正弦图象。',
+  desc: L('调节劲度系数 k、质量 m 和振幅 A，观察弹簧振子的往复运动与正弦图象。',
+          'Adjust the spring constant k, mass m and amplitude A to watch the oscillator swing back and forth alongside its sinusoidal graph.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '简谐运动（弹簧振子）', en: 'Simple Harmonic Motion (SHM)',
-      tagline: '点击播放，上方是弹簧振子的真实运动，下方是位移-时间正弦曲线。',
+      tagline: L('点击播放，上方是弹簧振子的真实运动，下方是位移-时间正弦曲线。',
+                 'Press Play — the top shows the real motion of the spring oscillator, the bottom its displacement–time sine curve.'),
       formula: 'F = −kx　·　x = A·cos(ωt)　·　ω = √(k/m)　T = 2π√(m/k)',
       explainHTML: `
         <h2>什么是简谐运动 <span class="en">What is SHM</span></h2>

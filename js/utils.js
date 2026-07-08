@@ -4,6 +4,18 @@
 window.TOPICS = [];
 function registerTopic(t) { window.TOPICS.push(t); }
 
+/* ---------- 语言 Language ---------- */
+const LANG = (function () {
+  try { return localStorage.getItem('mpv_lang') || 'zh'; } catch (e) { return 'zh'; }
+})();
+/* L(中文, English)：按当前语言返回文案 */
+function L(zh, en) { return LANG === 'en' && en != null ? en : zh; }
+function setLang(l) {
+  try { localStorage.setItem('mpv_lang', l); } catch (e) {}
+  location.reload();
+}
+document.documentElement.lang = LANG === 'en' ? 'en' : 'zh-CN';
+
 /* 调色板 */
 const C = {
   blue: '#2563eb', red: '#dc2626', green: '#059669', orange: '#ea580c',
@@ -31,19 +43,21 @@ const DEG = Math.PI / 180;
 /* ---------- 页面骨架：标题 + 实验区(画布/控制台) + 讲解区 ---------- */
 function topicPage(root, { title, en, tagline, formula, explainHTML }) {
   root.innerHTML = '';
+  // 英文模式下主标题用英文、副标题反标中文术语
+  const tMain = L(title, en || title), tSub = L(en || '', title);
   const head = h('div', 'topic-head',
-    `<h1>${title} <span class="en">${en || ''}</span></h1>` +
+    `<h1>${tMain} <span class="en">${tSub}</span></h1>` +
     (tagline ? `<p class="tagline">${tagline}</p>` : ''));
   if (formula) {
     head.appendChild(h('div', 'formula-hero',
-      `<span class="formula-hero-label">核心公式 KEY FORMULA</span>` +
+      `<span class="formula-hero-label">${L('核心公式 KEY FORMULA', 'KEY FORMULA 核心公式')}</span>` +
       `<div class="formula-hero-body">${formula}</div>`));
   }
   const lab = h('div', 'lab');
   const canvasBox = h('div', 'canvas-box');
   const panel = h('aside', 'panel',
     (formula ? `<div class="panel-formula">${formula}</div>` : '') +
-    '<div class="panel-title">⚙️ 参数控制台 PARAMETERS</div>');
+    `<div class="panel-title">${L('⚙️ 参数控制台 PARAMETERS', '⚙️ PARAMETERS 参数控制台')}</div>`);
   lab.append(canvasBox, panel);
   root.append(head, lab);
   if (explainHTML) root.appendChild(h('div', 'explain', explainHTML));
@@ -296,7 +310,8 @@ function addSeg(panel, { options, value, onChange }) {
   return { get value() { return cur; } };
 }
 
-function addReadout(panel, title = '📊 实时读数 READOUT') {
+function addReadout(panel, title) {
+  title = title || L('📊 实时读数 READOUT', '📊 READOUT 实时读数');
   panel.appendChild(h('div', 'panel-title', title));
   const d = h('div', 'readout');
   panel.appendChild(d);
@@ -348,9 +363,9 @@ function waveColor(nm) {
 /* 播放/暂停 + 重置按钮 */
 function addPlayControls(panel, anim, { onReset } = {}) {
   const row = h('div', 'btn-row');
-  const play = h('button', 'btn primary', '▶ 播放');
-  const reset = h('button', 'btn', '↺ 重置');
-  function sync() { play.innerHTML = anim.playing ? '⏸ 暂停' : '▶ 播放'; }
+  const play = h('button', 'btn primary', L('▶ 播放', '▶ Play'));
+  const reset = h('button', 'btn', L('↺ 重置', '↺ Reset'));
+  function sync() { play.innerHTML = anim.playing ? L('⏸ 暂停', '⏸ Pause') : L('▶ 播放', '▶ Play'); }
   play.onclick = () => { anim.toggle(); sync(); };
   reset.onclick = () => { anim.stop(); anim.t = 0; sync(); if (onReset) onReset(); };
   row.append(play, reset);

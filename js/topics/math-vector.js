@@ -3,7 +3,8 @@
 registerTopic({
   id: 'vector', cat: 'math', icon: '➡️',
   title: '平面向量', en: 'Vectors',
-  desc: '调整两个向量的模和方向角，观察向量加法的平行四边形法则与数量积的变化。',
+  desc: L('调整两个向量的模和方向角，观察向量加法的平行四边形法则与数量积的变化。',
+          'Adjust the magnitudes and direction angles of two vectors to explore the parallelogram rule of addition and how the dot product responds.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '平面向量', en: 'Vectors in the Plane',
