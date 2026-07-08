@@ -3,13 +3,15 @@
 registerTopic({
   id: 'coulomb', cat: 'optics', icon: '⚡',
   title: '库仑定律与电场', en: "Coulomb's Law & E-Field",
-  desc: '改变两个点电荷的电量与距离，观察静电力和周围电场的分布。',
+  desc: L('改变两个点电荷的电量与距离，观察静电力和周围电场的分布。',
+          'Change two point charges and their separation; watch the electrostatic force and the surrounding field pattern.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '库仑定律与电场', en: "Coulomb's Law & Electric Field",
-      tagline: '背景的小箭头是电场方向，把电荷改成同号/异号，场的形状完全不同。',
+      tagline: L('背景的小箭头是电场方向，把电荷改成同号/异号，场的形状完全不同。',
+                 'The background arrows show the field direction — like vs. unlike charges give completely different patterns.'),
       formula: 'F = k<span class="frac"><span>q₁q₂</span><span class="den">r²</span></span>　·　E = <span class="frac"><span>F</span><span class="den">q</span></span>　·　k = 9.0×10⁹ N·m²/C²',
-      explainHTML: `
+      explainHTML: L(`
         <h2>库仑定律 <span class="en">Coulomb's Law</span></h2>
         <p>真空中两个<span class="term">点电荷 <span class="en">(point charges)</span></span>之间的静电力：</p>
         <div class="formula">F = k<span class="frac"><span>q₁q₂</span><span class="den">r<sup>2</sup></span></span>
@@ -30,13 +32,34 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 把距离 r 从 2 m 调到 4 m，力变成原来的几分之一？（验证平方反比）② 把 q₂ 从 +3 改成 −3，箭头方向如何变化？背景电场呢？③ 把一个电荷调到 0，剩下的就是单个点电荷的辐射状电场。</div>
         <div class="think"><b>思考一下：</b>万有引力 F = Gm₁m₂/r² 和库仑力数学形式一样，但为什么我们感觉不到身边物体之间的电力，却能感觉到地球的引力？（提示：物质通常电中性，正负抵消。）</div>
-      `
+      `, `
+        <h2>Coulomb's Law <span class="en">库仑定律</span></h2>
+        <p>The electrostatic force between two <span class="term">point charges <span class="en">(点电荷)</span></span> in vacuum:</p>
+        <div class="formula">F = k<span class="frac"><span>q₁q₂</span><span class="den">r<sup>2</sup></span></span>
+          <span class="note">k = 9.0 × 10⁹ N·m²/C² (the Coulomb constant 静电力常量)</span></div>
+        <ul>
+          <li><b>Like charges repel, opposites attract</b> (同号相斥，异号相吸);</li>
+          <li>An <b>inverse-square law</b> (平方反比) — the same mathematical form as gravity! Double the distance, quarter the force;</li>
+          <li>The two charges feel equal and opposite forces (Newton's third law 牛顿第三定律).</li>
+        </ul>
+        <h2>The Electric Field <span class="en">电场</span></h2>
+        <p>Charges fill the space around them with an <span class="term">electric field <span class="en">(电场)</span></span> — the medium that transmits electric interaction.
+        The <span class="term">field strength <span class="en">(电场强度)</span></span> is the force on a unit positive charge:</p>
+        <div class="formula"><b>E</b> = <span class="frac"><span><b>F</b></span><span class="den">q</span></span>　　point-charge field: E = k<span class="frac"><span>Q</span><span class="den">r<sup>2</sup></span></span></div>
+        <ul>
+          <li>Direction: outward from positive charges, inward toward negative ones (see the background arrows);</li>
+          <li>Multiple charges obey <b>superposition (叠加原理)</b>: add the fields as vectors;</li>
+          <li>An unlike pair (a <span class="term">dipole <span class="en">(电偶极子)</span></span>) has field "flowing" from + to −.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Change r from 2 m to 4 m — the force drops to what fraction? (Inverse square!) ② Flip q₂ from +3 to −3: how do the force arrows and the background field change? ③ Set one charge to 0 — what remains is a single charge's radial field.</div>
+        <div class="think"><b>Think about it:</b> Gravity F = Gm₁m₂/r² has the same form as Coulomb's law — so why do we feel Earth's gravity but not electric forces between everyday objects? (Hint: matter is usually neutral; plus and minus cancel.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const sq1 = addSlider(panel, { label: '电荷 q₁', en: 'charge 1', min: -5, max: 5, step: 0.5, value: 3, unit: 'μC' });
-    const sq2 = addSlider(panel, { label: '电荷 q₂', en: 'charge 2', min: -5, max: 5, step: 0.5, value: -3, unit: 'μC' });
-    const sr = addSlider(panel, { label: '距离 r', en: 'distance', min: 1, max: 6, step: 0.1, value: 3, unit: 'm' });
+    const sq1 = addSlider(panel, { label: L('电荷 q₁', 'Charge q₁'), en: L('charge 1', '电荷'), min: -5, max: 5, step: 0.5, value: 3, unit: 'μC' });
+    const sq2 = addSlider(panel, { label: L('电荷 q₂', 'Charge q₂'), en: L('charge 2', '电荷'), min: -5, max: 5, step: 0.5, value: -3, unit: 'μC' });
+    const sr = addSlider(panel, { label: L('距离 r', 'Distance r'), en: L('distance', '距离'), min: 1, max: 6, step: 0.1, value: 3, unit: 'm' });
     const readout = addReadout(panel);
     const K = 8.99e9;
 
@@ -97,13 +120,19 @@ registerTopic({
       drawCharge(p1, q1, 'q₁');
       drawCharge(p2, q2, 'q₂');
 
-      readout.set(`
+      readout.set(L(`
         F = k·|q₁q₂|/r² = <b>${F < 0.001 ? fmtN(F * 1000, 3) + ' mN' : fmtN(F, 4) + ' N'}</b><br>
         ${both
           ? `两电荷${repel ? '<span class="tag" style="background:#fee2e2;color:#b91c1c">同号 → 相互排斥 repel</span>' : '<span class="tag" style="background:#dcfce7;color:#15803d">异号 → 相互吸引 attract</span>'}`
           : '<span class="warn">有电荷为 0，无相互作用力</span>'}<br>
         验证平方反比：r 加倍 → F 变为 <b>${fmtN(F / 4, 4)} N</b><br>
-        |F₁| = |F₂|（牛顿第三定律）✓`);
+        |F₁| = |F₂|（牛顿第三定律）✓`, `
+        F = k·|q₁q₂|/r² = <b>${F < 0.001 ? fmtN(F * 1000, 3) + ' mN' : fmtN(F, 4) + ' N'}</b><br>
+        ${both
+          ? `${repel ? '<span class="tag" style="background:#fee2e2;color:#b91c1c">like charges → repel 相斥</span>' : '<span class="tag" style="background:#dcfce7;color:#15803d">unlike charges → attract 相吸</span>'}`
+          : '<span class="warn">One charge is 0 — no interaction</span>'}<br>
+        Inverse-square check: doubling r → F becomes <b>${fmtN(F / 4, 4)} N</b><br>
+        |F₁| = |F₂| (Newton's third law) ✓`));
     }
     [sq1, sq2, sr].forEach(s => s.onChange(draw));
     cv.onResize(draw);

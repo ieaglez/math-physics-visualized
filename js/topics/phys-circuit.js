@@ -3,13 +3,16 @@
 registerTopic({
   id: 'circuit', cat: 'optics', icon: '🔋',
   title: '欧姆定律与电路', en: "Ohm's Law & Circuits",
-  desc: '切换串联/并联，调节电压与电阻，观察电流、分压分流和小灯泡的亮度变化。',
+  desc: L('切换串联/并联，调节电压与电阻，观察电流、分压分流和小灯泡的亮度变化。',
+          'Switch series/parallel, tune voltage and resistances, and watch currents, voltage division and bulb brightness respond.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '欧姆定律与电路', en: "Ohm's Law & Series/Parallel Circuits",
-      tagline: '灯泡的亮度代表功率。试试串联和并联哪种接法灯更亮？',
-      formula: 'I = <span class="frac"><span>U</span><span class="den">R</span></span>　·　串联 R = R₁+R₂　·　并联 <span class="frac"><span>1</span><span class="den">R</span></span> = <span class="frac"><span>1</span><span class="den">R₁</span></span> + <span class="frac"><span>1</span><span class="den">R₂</span></span>',
-      explainHTML: `
+      tagline: L('灯泡的亮度代表功率。试试串联和并联哪种接法灯更亮？',
+                 'Bulb brightness shows power. Which wiring makes the bulbs brighter — series or parallel?'),
+      formula: L('I = <span class="frac"><span>U</span><span class="den">R</span></span>　·　串联 R = R₁+R₂　·　并联 <span class="frac"><span>1</span><span class="den">R</span></span> = <span class="frac"><span>1</span><span class="den">R₁</span></span> + <span class="frac"><span>1</span><span class="den">R₂</span></span>',
+                 'I = <span class="frac"><span>U</span><span class="den">R</span></span>　·　series R = R₁+R₂　·　parallel <span class="frac"><span>1</span><span class="den">R</span></span> = <span class="frac"><span>1</span><span class="den">R₁</span></span> + <span class="frac"><span>1</span><span class="den">R₂</span></span>'),
+      explainHTML: L(`
         <h2>欧姆定律 <span class="en">Ohm's Law</span></h2>
         <div class="formula">I = <span class="frac"><span>U</span><span class="den">R</span></span>
           <span class="note">通过导体的电流与电压成正比、与电阻 (resistance) 成反比</span></div>
@@ -28,20 +31,39 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 同样的 U 和 R₁R₂，切换串/并联，比较总电流和灯泡亮度 —— 家里电器为什么都并联？② 串联时把 R₂ 调到最大，看 R₁ 上的电压被"抢走"多少（分压原理，电位器就是这么工作的）；③ 并联时断开一条支路（把它的电阻调到最大），另一条支路受影响吗？</div>
         <div class="think"><b>思考一下：</b>节日彩灯一坏全灭，是串联还是并联？保险丝为什么必须串联在电路里？</div>
-      `
+      `, `
+        <h2>Ohm's Law <span class="en">欧姆定律</span></h2>
+        <div class="formula">I = <span class="frac"><span>U</span><span class="den">R</span></span>
+          <span class="note">Current is proportional to voltage and inversely proportional to resistance (电阻)</span></div>
+        <p>Voltage U is like "water pressure", resistance R like the "pipe's narrowness", and current I the "flow". Power: P = UI = I²R = U²/R.</p>
+        <h2>Series Circuits <span class="en">串联电路</span></h2>
+        <ul>
+          <li>The current is the same everywhere: I₁ = I₂ = I;</li>
+          <li>Voltages add: U = U₁ + U₂ (<b>voltage division</b>: the larger resistor takes the larger share);</li>
+          <li>Total resistance R = R₁ + R₂ — more in series, more resistance.</li>
+        </ul>
+        <h2>Parallel Circuits <span class="en">并联电路</span></h2>
+        <ul>
+          <li>Each branch sees the same voltage: U₁ = U₂ = U;</li>
+          <li>Branch currents add: I = I₁ + I₂ (<b>current division</b>: the smaller resistor takes more);</li>
+          <li>1/R = 1/R₁ + 1/R₂ — the combination is <b>smaller than the smallest branch</b> (like widening the pipe).</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① With the same U, R₁, R₂, switch between series and parallel and compare total current and brightness — why are household appliances wired in parallel? ② In series, max out R₂ and watch it "steal" voltage from R₁ (that's how potentiometers work); ③ In parallel, does breaking one branch affect the other?</div>
+        <div class="think"><b>Think about it:</b> Old holiday lights all go dark when one bulb dies — series or parallel? Why must a fuse be wired in series?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 420);
     const mode = addSeg(panel, {
       options: [
-        { label: '串联 Series', value: 's' },
-        { label: '并联 Parallel', value: 'p' }
+        { label: L('串联 Series', 'Series 串联'), value: 's' },
+        { label: L('并联 Parallel', 'Parallel 并联'), value: 'p' }
       ],
       value: 's', onChange: () => draw()
     });
-    const sU = addSlider(panel, { label: '电源电压 U', en: 'voltage', min: 1, max: 24, step: 0.5, value: 12, unit: 'V' });
-    const sR1 = addSlider(panel, { label: '电阻 R₁（灯 1）', en: 'resistance', min: 1, max: 30, step: 0.5, value: 6, unit: 'Ω' });
-    const sR2 = addSlider(panel, { label: '电阻 R₂（灯 2）', en: 'resistance', min: 1, max: 30, step: 0.5, value: 12, unit: 'Ω' });
+    const sU = addSlider(panel, { label: L('电源电压 U', 'Source voltage U'), en: L('voltage', '电压'), min: 1, max: 24, step: 0.5, value: 12, unit: 'V' });
+    const sR1 = addSlider(panel, { label: L('电阻 R₁（灯 1）', 'Resistance R₁ (bulb 1)'), en: L('resistance', '电阻'), min: 1, max: 30, step: 0.5, value: 6, unit: 'Ω' });
+    const sR2 = addSlider(panel, { label: L('电阻 R₂（灯 2）', 'Resistance R₂ (bulb 2)'), en: L('resistance', '电阻'), min: 1, max: 30, step: 0.5, value: 12, unit: 'Ω' });
     const readout = addReadout(panel);
 
     // 灯泡绘制：亮度由功率决定
@@ -115,7 +137,7 @@ registerTopic({
         flow(ctx, L, B * 0.6 + T * 0.4, L, T, I);          // 左边向上
         flow(ctx, Rr, T, Rr, B * 0.6 + T * 0.4, I);        // 右边向下
         ctx.fillStyle = C.green; ctx.font = 'bold 12px sans-serif';
-        ctx.fillText('I = ' + fmtN(I, 2) + ' A（处处相等）', L + 8, (T + B) / 2);
+        ctx.fillText('I = ' + fmtN(I, 2) + window.L(' A（处处相等）', ' A (same everywhere)'), L + 8, (T + B) / 2);
       } else {
         Rtot = R1 * R2 / (R1 + R2); I1 = U / R1; I2 = U / R2; I = I1 + I2; U1 = U2 = U;
         const midY = (T + B) / 2;
@@ -142,16 +164,22 @@ registerTopic({
         flow(ctx, Rr, T, Rr, midY, I1);
         flow(ctx, Rr, midY + 6, Rr, B, I);
         ctx.fillStyle = C.green; ctx.font = 'bold 12px sans-serif';
-        ctx.fillText('干路 I = ' + fmtN(I, 2) + ' A', L + 8, B - 10);
+        ctx.fillText(window.L('干路 I = ', 'main I = ') + fmtN(I, 2) + ' A', L + 8, B - 10);
       }
       const P = U * I;
-      readout.set(`
+      readout.set(window.L(`
         总电阻 R = <b>${fmtN(Rtot,2)} Ω</b>${series ? '（R₁+R₂）' : '（小于任一支路！）'}<br>
         ${series
           ? `电流 I = U/R = <b>${fmtN(I,2)} A</b>（处处相等）<br>分压：U₁ = <b>${fmtN(U1,2)} V</b>，U₂ = <b>${fmtN(U2,2)} V</b>（U₁+U₂=U ✓）`
           : `支路：I₁ = <b>${fmtN(I1,2)} A</b>，I₂ = <b>${fmtN(I2,2)} A</b><br>干路 I = I₁+I₂ = <b>${fmtN(I,2)} A</b>（分流 ✓）`}<br>
         灯 1 功率 P₁ = <b>${fmtN(series ? I*I*R1 : I1*I1*R1,2)} W</b>，灯 2 功率 P₂ = <b>${fmtN(series ? I*I*R2 : I2*I2*R2,2)} W</b><br>
-        总功率 P = UI = <b>${fmtN(P,2)} W</b>`);
+        总功率 P = UI = <b>${fmtN(P,2)} W</b>`, `
+        Total resistance R = <b>${fmtN(Rtot,2)} Ω</b>${series ? ' (R₁+R₂)' : ' (less than either branch!)'}<br>
+        ${series
+          ? `Current I = U/R = <b>${fmtN(I,2)} A</b> (same everywhere)<br>Voltage division: U₁ = <b>${fmtN(U1,2)} V</b>, U₂ = <b>${fmtN(U2,2)} V</b> (U₁+U₂=U ✓)`
+          : `Branches: I₁ = <b>${fmtN(I1,2)} A</b>, I₂ = <b>${fmtN(I2,2)} A</b><br>Main current I = I₁+I₂ = <b>${fmtN(I,2)} A</b> (current division ✓)`}<br>
+        Bulb 1 power P₁ = <b>${fmtN(series ? I*I*R1 : I1*I1*R1,2)} W</b>, bulb 2 power P₂ = <b>${fmtN(series ? I*I*R2 : I2*I2*R2,2)} W</b><br>
+        Total power P = UI = <b>${fmtN(P,2)} W</b>`));
     }
     [sU, sR1, sR2].forEach(s => s.onChange(draw));
     cv.onResize(draw);

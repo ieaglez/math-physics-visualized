@@ -96,7 +96,7 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(px - 110, py + L * scale); ctx.lineTo(px + 130, py + L * scale); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = '#b45309'; ctx.font = '11px sans-serif';
-      ctx.fillText(L('h = 0（势能零点）', 'h = 0 (PE reference)'), px + 70, py + L * scale + 16);
+      ctx.fillText(window.L('h = 0（势能零点）', 'h = 0 (PE reference)'), px + 70, py + L * scale + 16);
       // 摆线 + 球
       ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
@@ -118,7 +118,7 @@ registerTopic({
       const barX = W - 170, barW = 46, barB = H - 50, barH = H - 130;
       const sE = barH / Math.max(E0, 0.001);
       ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-      [[0, Ek, '#22c55e', L('动能 Eₖ', 'Kinetic Eₖ')], [1, Ep, '#fb923c', L('势能 Eₚ', 'Potential Eₚ')]].forEach(([i, E, col, lb]) => {
+      [[0, Ek, '#22c55e', window.L('动能 Eₖ', 'Kinetic Eₖ')], [1, Ep, '#fb923c', window.L('势能 Eₚ', 'Potential Eₚ')]].forEach(([i, E, col, lb]) => {
         const x = barX + i * (barW + 30);
         ctx.fillStyle = '#f1f2fa';
         ctx.fillRect(x, barB - barH, barW, barH);
@@ -133,10 +133,10 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(barX - 16, barB - E0 * sE); ctx.lineTo(barX + barW * 2 + 46, barB - E0 * sE); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = C.purple;
-      ctx.fillText(L('总机械能 E = ', 'Total E = ') + fmtN(E0, 1) + ' J', barX + barW + 15, barB - E0 * sE - 8);
+      ctx.fillText(window.L('总机械能 E = ', 'Total E = ') + fmtN(E0, 1) + ' J', barX + barW + 15, barB - E0 * sE - 8);
       ctx.textAlign = 'left';
       const vMax = Math.sqrt(2 * g * L * (1 - Math.cos(th0)));
-      readout.set(L(`
+      readout.set(window.L(`
         当前摆角 θ = <b>${fmtN(th / DEG,1)}°</b>，高度 h = <b>${fmtN(h0,3)} m</b><br>
         动能 Eₖ = ½mv² = <b>${fmtN(Ek,2)} J</b><br>
         势能 Eₚ = mgh = <b>${fmtN(Ep,2)} J</b><br>

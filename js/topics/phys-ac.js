@@ -3,13 +3,16 @@
 registerTopic({
   id: 'ac', cat: 'optics', icon: '🔌',
   title: '交流电与变压器', en: 'AC & Transformer',
-  desc: '观察正弦交流电波形，调节变压器匝数比，看电压如何被升高或降低。',
+  desc: L('观察正弦交流电波形，调节变压器匝数比，看电压如何被升高或降低。',
+          'Watch the sinusoidal AC waveform, adjust the transformer turns ratio, and see voltage stepped up or down.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '交流电与变压器', en: 'Alternating Current & Transformer',
-      tagline: '上方是输入/输出电压波形，下方是变压器。匝数比决定升压还是降压。',
-      formula: 'u = U₀sin(2πft)　·　有效值 U = <span class="frac"><span>U₀</span><span class="den">√2</span></span>　·　<span class="frac"><span>U₁</span><span class="den">U₂</span></span> = <span class="frac"><span>n₁</span><span class="den">n₂</span></span>',
-      explainHTML: `
+      tagline: L('上方是输入/输出电压波形，下方是变压器。匝数比决定升压还是降压。',
+                 'Top: input/output waveforms. Bottom: the transformer. The turns ratio decides step-up or step-down.'),
+      formula: L('u = U₀sin(2πft)　·　有效值 U = <span class="frac"><span>U₀</span><span class="den">√2</span></span>　·　<span class="frac"><span>U₁</span><span class="den">U₂</span></span> = <span class="frac"><span>n₁</span><span class="den">n₂</span></span>',
+                 'u = U₀sin(2πft)　·　RMS U = <span class="frac"><span>U₀</span><span class="den">√2</span></span>　·　<span class="frac"><span>U₁</span><span class="den">U₂</span></span> = <span class="frac"><span>n₁</span><span class="den">n₂</span></span>'),
+      explainHTML: L(`
         <h2>什么是交流电 <span class="en">What is AC</span></h2>
         <p>大小和方向随时间做周期性变化的电流叫<span class="term">交流电 <span class="en">(alternating current, AC)</span></span>。
         发电机线圈在磁场中匀速转动，产生正弦式电动势：</p>
@@ -29,14 +32,34 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 设 U₀ = 311 V，读数里的有效值是不是恰好 220 V？② 把匝数比调成 10:1 和 1:10，对比输出波形的高矮；③ 输出波形和输入始终同频率 —— 变压器改变电压，不改变频率。</div>
         <div class="think"><b>思考一下：</b>如果用变压器给 5 V 的直流电"升压"，输出会是多少？为什么远距离输电宁可用 50 万伏特高压？</div>
-      `
+      `, `
+        <h2>What Is AC <span class="en">什么是交流电</span></h2>
+        <p>Current whose magnitude and direction vary periodically is <span class="term">alternating current <span class="en">(交流电, AC)</span></span>.
+        A generator coil rotating uniformly in a magnetic field produces a sinusoidal EMF:</p>
+        <div class="formula">u = U₀·sin(2πft)
+          <span class="note">U₀ is the peak value; mains power in China is f = 50 Hz — the direction flips 100 times a second</span></div>
+        <h2>RMS Value <span class="en">有效值</span></h2>
+        <div class="formula">U<sub>rms</sub> = <span class="frac"><span>U₀</span><span class="den">√2</span></span> ≈ 0.707·U₀
+          <span class="note">Defined by heating effect: the DC voltage that would deliver the same power. "220 V" is the RMS — the peak is actually 311 V!</span></div>
+        <h2>The Transformer <span class="en">变压器</span></h2>
+        <p>It changes AC voltage via <b>electromagnetic induction</b> (mutual inductance) — the trump card that won AC the "War of the Currents":</p>
+        <div class="formula"><span class="frac"><span>U₁</span><span class="den">U₂</span></span> = <span class="frac"><span>n₁</span><span class="den">n₂</span></span>
+          <span class="note">Ideal transformer: voltage ratio = turns ratio; power passes through, U₁I₁ = U₂I₂, so stepping voltage up steps current down</span></div>
+        <ul>
+          <li>n₂ &gt; n₁: <b>step-up</b> — long-distance lines run at hundreds of kilovolts because loss P = I²R shrinks as current shrinks;</li>
+          <li>n₂ &lt; n₁: <b>step-down</b> — back to 220 V at your home, then 5–20 V in a phone charger;</li>
+          <li>Transformers only work on AC — a steady DC makes no changing flux, hence no induced EMF.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Set U₀ = 311 V — is the RMS in the readout exactly 220 V? ② Compare 10:1 and 1:10 turns ratios and watch the output wave's height; ③ The output always matches the input frequency — a transformer changes voltage, never frequency.</div>
+        <div class="think"><b>Think about it:</b> What would a transformer output if you fed it 5 V DC? And why do long-distance lines prefer 500 kV?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const sU0 = addSlider(panel, { label: '输入峰值 U₀', en: 'peak voltage', min: 50, max: 400, step: 1, value: 311, unit: 'V' });
-    const sf = addSlider(panel, { label: '频率 f', en: 'frequency', min: 10, max: 100, step: 5, value: 50, unit: 'Hz' });
-    const sn1 = addSlider(panel, { label: '原线圈匝数 n₁', en: 'primary turns', min: 100, max: 1000, step: 50, value: 500 });
-    const sn2 = addSlider(panel, { label: '副线圈匝数 n₂', en: 'secondary turns', min: 100, max: 1000, step: 50, value: 250 });
+    const sU0 = addSlider(panel, { label: L('输入峰值 U₀', 'Input peak U₀'), en: L('peak voltage', '峰值'), min: 50, max: 400, step: 1, value: 311, unit: 'V' });
+    const sf = addSlider(panel, { label: L('频率 f', 'Frequency f'), en: L('frequency', '频率'), min: 10, max: 100, step: 5, value: 50, unit: 'Hz' });
+    const sn1 = addSlider(panel, { label: L('原线圈匝数 n₁', 'Primary turns n₁'), en: L('primary turns', '原线圈'), min: 100, max: 1000, step: 50, value: 500 });
+    const sn2 = addSlider(panel, { label: L('副线圈匝数 n₂', 'Secondary turns n₂'), en: L('secondary turns', '副线圈'), min: 100, max: 1000, step: 50, value: 250 });
     const readout = addReadout(panel);
     const anim = makeAnimator(() => draw());
     addPlayControls(panel, anim, { onReset: () => draw() });
@@ -80,11 +103,11 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(gL, GY(U0 / Math.SQRT2)); ctx.lineTo(gR, GY(U0 / Math.SQRT2)); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = C.blue; ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('输入 u₁（峰值 ' + fmtN(U0, 0) + ' V）', gL + 10, gT + 18);
+      ctx.fillText(L('输入 u₁（峰值 ', 'input u₁ (peak ') + fmtN(U0, 0) + ' V）', gL + 10, gT + 18);
       ctx.fillStyle = C.orange;
-      ctx.fillText('输出 u₂（峰值 ' + fmtN(U2peak, 0) + ' V）', gL + 220, gT + 18);
+      ctx.fillText(L('输出 u₂（峰值 ', 'output u₂ (peak ') + fmtN(U2peak, 0) + ' V）', gL + 220, gT + 18);
       ctx.fillStyle = 'rgba(37,99,235,.7)'; ctx.font = '11px sans-serif';
-      ctx.fillText('U₁有效 = U₀/√2', gR - 108, GY(U0 / Math.SQRT2) - 5);
+      ctx.fillText(L('U₁有效 = U₀/√2', 'U₁ RMS = U₀/√2'), gR - 108, GY(U0 / Math.SQRT2) - 5);
       // —— 下：变压器示意 ——
       const tx = W / 2, ty = (gB + H) / 2 + 8;
       const coreW = 104, coreH = 108;
@@ -105,19 +128,25 @@ registerTopic({
       coil(-1, n1, C.blue);
       coil(1, n2, C.orange);
       ctx.font = 'bold 12.5px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillStyle = C.blue; ctx.fillText(`原线圈 n₁ = ${n1}`, tx - coreW / 2 - 66, ty + coreH / 2 + 20);
-      ctx.fillStyle = C.orange; ctx.fillText(`副线圈 n₂ = ${n2}`, tx + coreW / 2 + 66, ty + coreH / 2 + 20);
+      ctx.fillStyle = C.blue; ctx.fillText(L(`原线圈 n₁ = ${n1}`, `primary n₁ = ${n1}`), tx - coreW / 2 - 66, ty + coreH / 2 + 20);
+      ctx.fillStyle = C.orange; ctx.fillText(L(`副线圈 n₂ = ${n2}`, `secondary n₂ = ${n2}`), tx + coreW / 2 + 66, ty + coreH / 2 + 20);
       ctx.fillStyle = '#697086'; ctx.font = '11.5px sans-serif';
-      ctx.fillText('铁芯（磁通量的通道）', tx, ty + coreH / 2 + 20);
+      ctx.fillText(L('铁芯（磁通量的通道）', 'iron core (flux path)'), tx, ty + coreH / 2 + 20);
       ctx.textAlign = 'left';
       const ratio = n2 / n1;
-      readout.set(`
+      readout.set(L(`
         输入有效值 U₁ = U₀/√2 = <b>${fmtN(U0 / Math.SQRT2,1)} V</b>
         ${Math.abs(U0 - 311) < 2 ? '<span class="tag">≈220V 市电！</span>' : ''}<br>
         匝数比 n₁ : n₂ = ${n1} : ${n2} = <b>${fmtN(n1/n2,2)} : 1</b><br>
         输出有效值 U₂ = U₁·n₂/n₁ = <b>${fmtN(U0 / Math.SQRT2 * ratio,1)} V</b><br>
         输出峰值 = <b>${fmtN(U2peak,1)} V</b>，频率不变 = <b>${fmtN(sf.value,0)} Hz</b><br>
-        <span class="tag">${ratio > 1.02 ? '升压变压器 step-up' : ratio < 0.98 ? '降压变压器 step-down' : '1:1 隔离变压器'}</span>`);
+        <span class="tag">${ratio > 1.02 ? '升压变压器 step-up' : ratio < 0.98 ? '降压变压器 step-down' : '1:1 隔离变压器'}</span>`, `
+        Input RMS U₁ = U₀/√2 = <b>${fmtN(U0 / Math.SQRT2,1)} V</b>
+        ${Math.abs(U0 - 311) < 2 ? '<span class="tag">≈220 V mains!</span>' : ''}<br>
+        Turns ratio n₁ : n₂ = ${n1} : ${n2} = <b>${fmtN(n1/n2,2)} : 1</b><br>
+        Output RMS U₂ = U₁·n₂/n₁ = <b>${fmtN(U0 / Math.SQRT2 * ratio,1)} V</b><br>
+        Output peak = <b>${fmtN(U2peak,1)} V</b>; frequency unchanged = <b>${fmtN(sf.value,0)} Hz</b><br>
+        <span class="tag">${ratio > 1.02 ? 'step-up transformer 升压' : ratio < 0.98 ? 'step-down transformer 降压' : '1:1 isolation transformer'}</span>`));
     }
     [sU0, sf, sn1, sn2].forEach(s => s.onChange(draw));
     cv.onResize(draw);

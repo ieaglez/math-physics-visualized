@@ -3,13 +3,16 @@
 registerTopic({
   id: 'lorentz', cat: 'optics', icon: '🧲',
   title: '带电粒子在磁场中', en: 'Lorentz Force',
-  desc: '调节电荷、速度和磁感应强度，观察带电粒子在匀强磁场中的圆周运动。',
+  desc: L('调节电荷、速度和磁感应强度，观察带电粒子在匀强磁场中的圆周运动。',
+          'Tune charge, speed and field strength; watch a charged particle circle in a uniform magnetic field.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '带电粒子在磁场中的运动', en: 'Charged Particle in a Magnetic Field',
-      tagline: '背景的 ⊗ 表示磁场垂直屏幕向里。洛伦兹力始终垂直于速度，所以粒子转圈。',
-      formula: 'F = qvB　·　半径 r = <span class="frac"><span>mv</span><span class="den">qB</span></span>　·　周期 T = <span class="frac"><span>2πm</span><span class="den">qB</span></span>（与 v 无关！）',
-      explainHTML: `
+      tagline: L('背景的 ⊗ 表示磁场垂直屏幕向里。洛伦兹力始终垂直于速度，所以粒子转圈。',
+                 'The ⊗ symbols mean the field points into the screen. The Lorentz force stays perpendicular to v — so the particle circles.'),
+      formula: L('F = qvB　·　半径 r = <span class="frac"><span>mv</span><span class="den">qB</span></span>　·　周期 T = <span class="frac"><span>2πm</span><span class="den">qB</span></span>（与 v 无关！）',
+                 'F = qvB　·　radius r = <span class="frac"><span>mv</span><span class="den">qB</span></span>　·　period T = <span class="frac"><span>2πm</span><span class="den">qB</span></span> (independent of v!)'),
+      explainHTML: L(`
         <h2>洛伦兹力 <span class="en">Lorentz Force</span></h2>
         <div class="formula">F = qvB（v ⊥ B 时）
           <span class="note">方向用左手定则 (left-hand rule)：磁感线穿入手心，四指指向<b>正电荷</b>运动方向，拇指即为受力方向（负电荷反向）</span></div>
@@ -31,14 +34,36 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 把 v 翻倍：半径翻倍，但读数里周期 T 不变 —— 这是本专题最反直觉的结论；② 把电荷从 + 切到 −，旋转方向立刻反向；③ 增大 B，圈被"勒"得更小。</div>
         <div class="think"><b>思考一下：</b>如果粒子速度方向与磁场平行（而不是垂直），洛伦兹力是多少？粒子将做什么运动？（提示：F = qvB·sinθ）</div>
-      `
+      `, `
+        <h2>The Lorentz Force <span class="en">洛伦兹力</span></h2>
+        <div class="formula">F = qvB (when v ⊥ B)
+          <span class="note">Direction from the left-hand rule (左手定则): field lines enter the palm, fingers point along a <b>positive</b> charge's velocity, and the thumb gives the force (reverse for negative charges)</span></div>
+        <ul>
+          <li>The Lorentz force is <b>always perpendicular to the velocity</b> ⟹ it never does work — it changes direction, not speed;</li>
+          <li>So the particle moves in a <b>uniform circle</b>, with the Lorentz force serving as the centripetal force.</li>
+        </ul>
+        <h2>Radius &amp; Period <span class="en">半径与周期</span></h2>
+        <div class="formula">qvB = <span class="frac"><span>mv²</span><span class="den">r</span></span> ⟹ r = <span class="frac"><span>mv</span><span class="den">qB</span></span>　　T = <span class="frac"><span>2πr</span><span class="den">v</span></span> = <span class="frac"><span>2πm</span><span class="den">qB</span></span></div>
+        <ul>
+          <li>Faster particles trace bigger circles; stronger fields squeeze them smaller;</li>
+          <li><b>The period doesn't depend on speed!</b> Fast particles ride big circles, slow ones small circles — same lap time. That's the heart of the cyclotron (回旋加速器);</li>
+          <li>The sign of the charge sets the turning direction — cloud-chamber tracks of + and − particles curve opposite ways.</li>
+        </ul>
+        <h2>Applications <span class="en">应用</span></h2>
+        <ul>
+          <li><b>Mass spectrometer (质谱仪)</b>: same speed, different mass → different radius → separates isotopes;</li>
+          <li><b>Cyclotrons</b>, CRT electron beams, and Earth's magnetic shield against cosmic rays (auroras!).</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Double v: the radius doubles but the period in the readout doesn't budge — the most counter-intuitive fact here; ② Flip the charge from + to −: the rotation reverses instantly; ③ Crank up B and watch the circle get "squeezed".</div>
+        <div class="think"><b>Think about it:</b> If the velocity were parallel to the field (instead of perpendicular), how big is the Lorentz force? What motion results? (Hint: F = qvB·sinθ.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const sq = addSlider(panel, { label: '电荷 q（含正负）', en: 'charge', min: -3, max: 3, step: 0.5, value: 1.5, unit: 'μC' });
-    const sm = addSlider(panel, { label: '质量 m', en: 'mass', min: 0.5, max: 5, step: 0.25, value: 2, unit: 'mg' });
-    const sv = addSlider(panel, { label: '速率 v', en: 'speed', min: 0.5, max: 4, step: 0.1, value: 2 });
-    const sB = addSlider(panel, { label: '磁感应强度 B', en: 'field strength', min: 0.5, max: 4, step: 0.1, value: 2, unit: 'T' });
+    const sq = addSlider(panel, { label: L('电荷 q（含正负）', 'Charge q (±)'), en: L('charge', '电荷'), min: -3, max: 3, step: 0.5, value: 1.5, unit: 'μC' });
+    const sm = addSlider(panel, { label: L('质量 m', 'Mass m'), en: L('mass', '质量'), min: 0.5, max: 5, step: 0.25, value: 2, unit: 'mg' });
+    const sv = addSlider(panel, { label: L('速率 v', 'Speed v'), en: L('speed', '速率'), min: 0.5, max: 4, step: 0.1, value: 2 });
+    const sB = addSlider(panel, { label: L('磁感应强度 B', 'Field strength B'), en: L('field strength', '磁感应强度'), min: 0.5, max: 4, step: 0.1, value: 2, unit: 'T' });
     const readout = addReadout(panel);
     let phase = 0, trail = [];
     const anim = makeAnimator(dt => {
@@ -73,10 +98,11 @@ registerTopic({
         }
       }
       ctx.fillStyle = '#8b93bd'; ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('B ⊗ 磁场垂直屏幕向里', plot.X(-5.7), plot.Y(4.35));
+      ctx.fillText(L('B ⊗ 磁场垂直屏幕向里', 'B ⊗ field into the screen'), plot.X(-5.7), plot.Y(4.35));
       ctx.restore();
       if (Math.abs(q) < 0.01) {
-        readout.set('<span class="warn">q = 0：不受洛伦兹力，粒子做匀速直线运动。</span>');
+        readout.set(L('<span class="warn">q = 0：不受洛伦兹力，粒子做匀速直线运动。</span>',
+                      '<span class="warn">q = 0: no Lorentz force — the particle moves in a straight line.</span>'));
         return;
       }
       // 物理量（演示单位）
@@ -94,7 +120,7 @@ registerTopic({
       // 速度（切向，方向随旋转方向）与洛伦兹力（指向圆心）
       const tx = -Math.sin(phase) * dir, ty = Math.cos(phase) * dir;
       plot.arrow(P[0], P[1], P[0] + tx * v * 0.8, P[1] + ty * v * 0.8, { color: C.green, width: 3, label: 'v', labelDy: -8 });
-      plot.arrow(P[0], P[1], P[0] - Math.cos(phase) * 1.3, P[1] - Math.sin(phase) * 1.3, { color: C.red, width: 3, label: 'F洛', labelDy: 18 });
+      plot.arrow(P[0], P[1], P[0] - Math.cos(phase) * 1.3, P[1] - Math.sin(phase) * 1.3, { color: C.red, width: 3, label: L('F洛', 'F_L'), labelDy: 18 });
       // 粒子
       ctx.fillStyle = q > 0 ? '#ef4444' : '#3b82f6';
       ctx.beginPath(); ctx.arc(plot.X(P[0]), plot.Y(P[1]), 11, 0, Math.PI * 2); ctx.fill();
@@ -102,13 +128,19 @@ registerTopic({
       ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText(q > 0 ? '+' : '−', plot.X(P[0]), plot.Y(P[1]) + 5);
       ctx.textAlign = 'left';
-      readout.set(`
+      readout.set(L(`
         洛伦兹力 F = qvB = <b>${fmtN(F,2)}</b>（演示单位）<br>
         半径 r = mv/(qB) = <b>${fmtN(m*v/(Math.abs(q)*B),3)}</b><br>
         周期 T = 2πm/(qB) = <b>${fmtN(T,3)}</b>
         <span class="tag">与 v 无关！</span><br>
         旋转方向：<b>${q > 0 ? '逆时针' : '顺时针'}</b>（左手定则，${q > 0 ? '正' : '负'}电荷）<br>
-        F ⊥ v ⟹ 不做功，速率恒定 ✓`);
+        F ⊥ v ⟹ 不做功，速率恒定 ✓`, `
+        Lorentz force F = qvB = <b>${fmtN(F,2)}</b> (demo units)<br>
+        Radius r = mv/(qB) = <b>${fmtN(m*v/(Math.abs(q)*B),3)}</b><br>
+        Period T = 2πm/(qB) = <b>${fmtN(T,3)}</b>
+        <span class="tag">independent of v!</span><br>
+        Rotation: <b>${q > 0 ? 'counterclockwise' : 'clockwise'}</b> (left-hand rule, ${q > 0 ? 'positive' : 'negative'} charge)<br>
+        F ⊥ v ⟹ no work done; speed constant ✓`));
     }
     [sq, sm, sv, sB].forEach(s => s.onChange(draw));
     cv.onResize(draw);

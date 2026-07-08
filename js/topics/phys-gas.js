@@ -3,13 +3,16 @@
 registerTopic({
   id: 'gas', cat: 'modern', icon: '🎈',
   title: '理想气体定律', en: 'Ideal Gas Law',
-  desc: '推动活塞压缩气体、升高温度，观察分子运动加剧与压强变化，验证 pV = nRT。',
+  desc: L('推动活塞压缩气体、升高温度，观察分子运动加剧与压强变化，验证 pV = nRT。',
+          'Push the piston, heat the gas, watch the molecules speed up and the pressure climb — verifying pV = nRT.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '理想气体定律', en: 'Ideal Gas Law',
-      tagline: '左边是气缸里乱撞的分子（温度越高撞得越快），右边是 p–V 图上的等温线。',
-      formula: 'pV = nRT　·　<span class="frac"><span>p₁V₁</span><span class="den">T₁</span></span> = <span class="frac"><span>p₂V₂</span><span class="den">T₂</span></span>（一定质量气体）',
-      explainHTML: `
+      tagline: L('左边是气缸里乱撞的分子（温度越高撞得越快），右边是 p–V 图上的等温线。',
+                 'Left: molecules ricocheting in a cylinder (hotter = faster). Right: isotherms on the p–V diagram.'),
+      formula: L('pV = nRT　·　<span class="frac"><span>p₁V₁</span><span class="den">T₁</span></span> = <span class="frac"><span>p₂V₂</span><span class="den">T₂</span></span>（一定质量气体）',
+                 'pV = nRT　·　<span class="frac"><span>p₁V₁</span><span class="den">T₁</span></span> = <span class="frac"><span>p₂V₂</span><span class="den">T₂</span></span> (fixed amount of gas)'),
+      explainHTML: L(`
         <h2>气体的三个状态量 <span class="en">State Variables</span></h2>
         <ul>
           <li><b>压强 p <span class="en">(pressure)</span></b>：大量分子撞击器壁的宏观表现；</li>
@@ -32,12 +35,35 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 固定 T，把 V 压缩到一半，看 p 是否精确翻倍（玻意耳）；② 固定 V，把 T 从 300 K 升到 600 K，p 也翻倍（查理）；③ 观察右图：改变 V 时状态点沿蓝色等温线滑动，改变 T 时则跳到另一条等温线上。读数里 pV/T 永远不变。</div>
         <div class="think"><b>思考一下：</b>夏天自行车胎为什么容易爆？高原上为什么袋装零食会鼓起来？分别对应哪条定律？</div>
-      `
+      `, `
+        <h2>Three State Variables <span class="en">气体的三个状态量</span></h2>
+        <ul>
+          <li><b>Pressure p <span class="en">(压强)</span></b>: the macroscopic effect of countless molecules hammering the walls;</li>
+          <li><b>Volume V <span class="en">(体积)</span></b>: the space the molecules roam;</li>
+          <li><b>Temperature T <span class="en">(温度)</span></b>: the measure of average molecular kinetic energy — always in kelvin: T = t℃ + 273.</li>
+        </ul>
+        <h2>Three Experimental Laws <span class="en">三个实验定律</span></h2>
+        <ul>
+          <li><span class="term">Boyle's law <span class="en">(玻意耳定律)</span></span>: T fixed, pV = constant — halve the volume, double the pressure (a hyperbola on the p–V diagram: an <b>isotherm</b>);</li>
+          <li><span class="term">Charles's law <span class="en">(查理定律)</span></span>: V fixed, p/T = constant — why a sealed can explodes when heated;</li>
+          <li><span class="term">Gay-Lussac's law <span class="en">(盖-吕萨克定律)</span></span>: p fixed, V/T = constant — how hot-air balloons rise.</li>
+        </ul>
+        <div class="formula">All in one: <span class="frac"><span>pV</span><span class="den">T</span></span> = constant, i.e. pV = nRT
+          <span class="note">R = 8.31 J/(mol·K) (the universal gas constant); n is the amount of gas</span></div>
+        <h2>The Microscopic Picture <span class="en">微观解释</span></h2>
+        <ul>
+          <li>Compress the volume → molecules hit the walls more often → p rises;</li>
+          <li>Raise the temperature → molecules move faster and hit harder → p rises;</li>
+          <li>An ideal gas ignores molecular size and attractions — real gases at room conditions come close.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Fix T and halve V — does p exactly double (Boyle)? ② Fix V and raise T from 300 K to 600 K — p doubles too (Charles); ③ Watch the right graph: changing V slides the state point along the blue isotherm; changing T jumps it to another isotherm. The readout's pV/T never budges.</div>
+        <div class="think"><b>Think about it:</b> Why do bicycle tires burst more easily in summer? Why do snack bags puff up in the highlands? Which law explains each?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const sV = addSlider(panel, { label: '体积 V（推动活塞）', en: 'volume', min: 1, max: 4, step: 0.05, value: 2, unit: 'L' });
-    const sT = addSlider(panel, { label: '温度 T', en: 'temperature', min: 150, max: 600, step: 5, value: 300, unit: 'K' });
+    const sV = addSlider(panel, { label: L('体积 V（推动活塞）', 'Volume V (moves piston)'), en: L('volume', '体积'), min: 1, max: 4, step: 0.05, value: 2, unit: 'L' });
+    const sT = addSlider(panel, { label: L('温度 T', 'Temperature T'), en: L('temperature', '温度'), min: 150, max: 600, step: 5, value: 300, unit: 'K' });
     const readout = addReadout(panel);
     const n = 0.08, Rgas = 8.31;
     const pOf = (V, T) => n * Rgas * T / (V / 1000) / 1000; // kPa
@@ -88,10 +114,11 @@ registerTopic({
       ctx.fillRect(cylX + 2, gasTop - 16, cylW - 4, 16);
       ctx.fillStyle = '#64748b';
       ctx.fillRect(cylX + cylW / 2 - 5, gasTop - 60, 10, 46);
-      pxArrow(ctx, cylX + cylW / 2 + 30, gasTop - 40, cylX + cylW / 2 + 30, gasTop - 8, { color: C.orange, width: 2.4, label: '活塞', labelDx: 6, labelDy: 12 });
+      pxArrow(ctx, cylX + cylW / 2 + 30, gasTop - 40, cylX + cylW / 2 + 30, gasTop - 8, { color: C.orange, width: 2.4, label: L('活塞', 'piston'), labelDx: 6, labelDy: 12 });
       ctx.fillStyle = '#475569'; ctx.font = 'bold 12.5px sans-serif'; ctx.textAlign = 'center';
       ctx.fillText(`V = ${fmtN(V,2)} L`, cylX + cylW / 2, cylB + 20);
       ctx.fillText(`T = ${fmtN(T,0)} K（${fmtN(T-273,0)}℃）`, cylX + cylW / 2, cylB + 36);
+      // （T 为局部变量，画布内后续翻译使用 window.L）
       ctx.textAlign = 'left';
       // —— 右：p-V 图 ——
       const gL = cylX + cylW + 56, gR = W - 20, gT = 36, gB = H - 46;
@@ -136,15 +163,21 @@ registerTopic({
       ctx.beginPath(); ctx.arc(GX(V), GY(p), 6.5, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
       ctx.fillStyle = C.soft; ctx.font = '11.5px sans-serif';
-      ctx.fillText('等温线 pV = 常数（双曲线）', gL + 12, gB - 8);
+      ctx.fillText(window.L('等温线 pV = 常数（双曲线）', 'isotherms: pV = const (hyperbolas)'), gL + 12, gB - 8);
 
-      readout.set(`
+      readout.set(window.L(`
         压强 p = nRT/V = <b>${fmtN(p,1)} kPa</b>
         ${Math.abs(p - 101) < 4 ? '<span class="tag">≈1 个标准大气压</span>' : ''}<br>
         pV = <b>${fmtN(p * V,1)}</b> kPa·L<br>
         pV/T = <b style="color:${C.purple}">${fmtN(p * V / T,4)}</b> kPa·L/K（恒定 ✓）<br>
         分子平均动能 ∝ T：${fmtN(T,0)} K 时约为 300 K 的 <b>${fmtN(T/300,2)}</b> 倍<br>
-        （n = 0.08 mol，R = 8.31 J/(mol·K)）`);
+        （n = 0.08 mol，R = 8.31 J/(mol·K)）`, `
+        Pressure p = nRT/V = <b>${fmtN(p,1)} kPa</b>
+        ${Math.abs(p - 101) < 4 ? '<span class="tag">≈1 standard atmosphere</span>' : ''}<br>
+        pV = <b>${fmtN(p * V,1)}</b> kPa·L<br>
+        pV/T = <b style="color:${C.purple}">${fmtN(p * V / T,4)}</b> kPa·L/K (constant ✓)<br>
+        Mean kinetic energy ∝ T: at ${fmtN(T,0)} K it's <b>${fmtN(T/300,2)}×</b> the 300 K value<br>
+        (n = 0.08 mol, R = 8.31 J/(mol·K))`));
     }
     [sV, sT].forEach(s => s.onChange(draw));
     cv.onResize(draw);

@@ -3,13 +3,16 @@
 registerTopic({
   id: 'photoelectric', cat: 'modern', icon: '💡',
   title: '光电效应', en: 'Photoelectric Effect',
-  desc: '换金属、调波长，看电子能否被打出来 —— 爱因斯坦靠解释它拿了诺贝尔奖。',
+  desc: L('换金属、调波长，看电子能否被打出来 —— 爱因斯坦靠解释它拿了诺贝尔奖。',
+          'Swap metals and tune the wavelength to see whether electrons fly out — explaining this won Einstein his Nobel Prize.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '光电效应', en: 'Photoelectric Effect',
-      tagline: '光强再大，频率不够也打不出电子；频率够高，再弱的光也立刻有电子飞出。',
-      formula: 'E<sub>k,max</sub> = hν − W₀　·　光子能量 E = hν = <span class="frac"><span>hc</span><span class="den">λ</span></span>　·　截止频率 ν<sub>c</sub> = <span class="frac"><span>W₀</span><span class="den">h</span></span>',
-      explainHTML: `
+      tagline: L('光强再大，频率不够也打不出电子；频率够高，再弱的光也立刻有电子飞出。',
+                 'However intense, low-frequency light ejects nothing; above the threshold, even faint light frees electrons instantly.'),
+      formula: L('E<sub>k,max</sub> = hν − W₀　·　光子能量 E = hν = <span class="frac"><span>hc</span><span class="den">λ</span></span>　·　截止频率 ν<sub>c</sub> = <span class="frac"><span>W₀</span><span class="den">h</span></span>',
+                 'E<sub>k,max</sub> = hν − W₀　·　photon energy E = hν = <span class="frac"><span>hc</span><span class="den">λ</span></span>　·　cutoff frequency ν<sub>c</sub> = <span class="frac"><span>W₀</span><span class="den">h</span></span>'),
+      explainHTML: L(`
         <h2>经典物理解释不了的现象 <span class="en">A Classical Puzzle</span></h2>
         <p>光照射金属表面能打出电子（<span class="term">光电子 <span class="en">(photoelectrons)</span></span>），但实验发现：</p>
         <ul>
@@ -29,21 +32,41 @@ registerTopic({
           <span class="note">例：500 nm 绿光的光子能量 ≈ 2.48 eV</span></div>
         <div class="tip"><b>实验建议：</b>① 选锌（W₀ = 4.31 eV），把波长拖遍整个可见光段 —— 全都打不出电子（所以需要紫外线）；② 换成铯（W₀ = 2.14 eV），慢慢调短波长，在 ≈580 nm 处电子突然出现；③ 把光强调大：飞出的电子变多了，但读数里的 Ek,max 一动不动。</div>
         <div class="think"><b>思考一下：</b>右图中不同金属的直线互相平行 —— 斜率是什么？（都是普朗克常量 h！密立根正是用这个方法精确测出了 h。）</div>
-      `
+      `, `
+        <h2>A Puzzle Classical Physics Couldn't Solve <span class="en">经典物理解释不了的现象</span></h2>
+        <p>Light striking a metal can knock out electrons (<span class="term">photoelectrons <span class="en">(光电子)</span></span>), but experiments showed:</p>
+        <ul>
+          <li>There is a <span class="term">cutoff frequency <span class="en">(截止频率)</span></span>: below ν<sub>c</sub>, <b>no</b> electrons emerge — no matter how bright or how long the light shines;</li>
+          <li>The electrons' maximum kinetic energy depends only on the <b>frequency</b>, not the intensity;</li>
+          <li>Above the threshold, emission is <b>instantaneous</b>.</li>
+        </ul>
+        <p>If light were a continuous wave, none of this makes sense.</p>
+        <h2>Einstein's Photon Theory (1905) <span class="en">爱因斯坦的光子说</span></h2>
+        <div class="formula">E<sub>k,max</sub> = hν − W₀
+          <span class="note">h = 6.63×10⁻³⁴ J·s (Planck's constant); W₀ is the work function (逸出功), a property of the metal</span></div>
+        <p>Light comes in packets: each <span class="term">photon <span class="en">(光子)</span></span> carries E = hν.
+        One electron absorbs one photon: if it covers the "exit fee" W₀, the electron escapes with the remainder as kinetic energy.
+        <b>Brighter light = more photons = more electrons — but no more energy each.</b> All three puzzles dissolve. This work earned Einstein the 1921 Nobel Prize.</p>
+        <h2>A Handy Conversion <span class="en">实用换算</span></h2>
+        <div class="formula">E(eV) ≈ <span class="frac"><span>1240</span><span class="den">λ(nm)</span></span>
+          <span class="note">e.g. a 500 nm green photon carries ≈ 2.48 eV</span></div>
+        <div class="tip"><b>Try this:</b> ① Pick zinc (W₀ = 4.31 eV) and sweep the whole visible range — nothing comes out (you need ultraviolet); ② Switch to cesium (W₀ = 2.14 eV) and shorten the wavelength: electrons suddenly appear near 580 nm; ③ Crank the intensity: more electrons fly, but Ek,max in the readout doesn't move.</div>
+        <div class="think"><b>Think about it:</b> The lines for different metals in the right graph are parallel — what is their slope? (Planck's constant h! Millikan measured h precisely this way.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 460);
-    const METALS = { cs: { name: '铯 Cs', W: 2.14 }, na: { name: '钠 Na', W: 2.75 }, zn: { name: '锌 Zn', W: 4.31 } };
+    const METALS = { cs: { name: L('铯 Cs', 'Cesium Cs'), W: 2.14 }, na: { name: L('钠 Na', 'Sodium Na'), W: 2.75 }, zn: { name: L('锌 Zn', 'Zinc Zn'), W: 4.31 } };
     const metal = addSeg(panel, {
       options: [
-        { label: '铯 2.14eV', value: 'cs' },
-        { label: '钠 2.75eV', value: 'na' },
-        { label: '锌 4.31eV', value: 'zn' }
+        { label: L('铯 2.14eV', 'Cs 2.14eV'), value: 'cs' },
+        { label: L('钠 2.75eV', 'Na 2.75eV'), value: 'na' },
+        { label: L('锌 4.31eV', 'Zn 4.31eV'), value: 'zn' }
       ],
       value: 'cs', onChange: () => draw()
     });
-    const sl = addSlider(panel, { label: '入射光波长 λ', en: 'wavelength', min: 200, max: 800, step: 5, value: 450, unit: 'nm' });
-    const si = addSlider(panel, { label: '光强（光子数）', en: 'intensity', min: 1, max: 10, step: 1, value: 5 });
+    const sl = addSlider(panel, { label: L('入射光波长 λ', 'Wavelength λ'), en: L('wavelength', '波长'), min: 200, max: 800, step: 5, value: 450, unit: 'nm' });
+    const si = addSlider(panel, { label: L('光强（光子数）', 'Intensity (photon count)'), en: L('intensity', '光强'), min: 1, max: 10, step: 1, value: 5 });
     const readout = addReadout(panel);
     const anim = makeAnimator(() => draw());
     addPlayControls(panel, anim, {});
@@ -66,7 +89,7 @@ registerTopic({
       ctx.strokeStyle = '#697086'; ctx.lineWidth = 2;
       ctx.strokeRect(plateX, plateT, 20, plateB - plateT);
       ctx.fillStyle = '#475569'; ctx.font = 'bold 12.5px sans-serif';
-      ctx.fillText(`金属板：${METALS[metal.value].name}（W₀ = ${W0} eV）`, plateX - 60, plateB + 24);
+      ctx.fillText(L(`金属板：${METALS[metal.value].name}（W₀ = ${W0} eV）`, `metal plate: ${METALS[metal.value].name} (W₀ = ${W0} eV)`), plateX - 60, plateB + 24);
       // 光子（斜向下入射，数量∝光强）
       const t = anim.t;
       for (let i = 0; i < I; i++) {
@@ -77,7 +100,7 @@ registerTopic({
       }
       ctx.fillStyle = lam < 380 ? '#7c3aed' : col;
       ctx.font = 'bold 12px sans-serif';
-      ctx.fillText(lam < 380 ? '紫外线 UV' : '入射光', 24, plateT - 10);
+      ctx.fillText(lam < 380 ? L('紫外线 UV', 'ultraviolet UV') : L('入射光', 'incident light'), 24, plateT - 10);
       // 电子（若发射）
       if (emits) {
         const eCount = I;
@@ -92,9 +115,9 @@ registerTopic({
         }
       } else {
         ctx.fillStyle = '#b91c1c'; ctx.font = 'bold 13px sans-serif';
-        ctx.fillText('❌ hν < W₀，无电子飞出', plateX + 34, (plateT + plateB) / 2);
+        ctx.fillText(L('❌ hν < W₀，无电子飞出', '❌ hν < W₀ — no electrons'), plateX + 34, (plateT + plateB) / 2);
         ctx.font = '11.5px sans-serif'; ctx.fillStyle = '#697086';
-        ctx.fillText('（无论光强多大、照多久）', plateX + 34, (plateT + plateB) / 2 + 18);
+        ctx.fillText(L('（无论光强多大、照多久）', '(no matter how bright or how long)'), plateX + 34, (plateT + plateB) / 2 + 18);
       }
       // —— 右：Ek–ν 图 ——
       const gL = W * 0.56, gR = W - 24, gB = H - 56, gT = 40;
@@ -132,15 +155,21 @@ registerTopic({
         ctx.beginPath(); ctx.arc(GX(nu), GY(0), 5, 0, Math.PI * 2); ctx.fill();
       }
       ctx.fillStyle = C.soft; ctx.font = '11px sans-serif';
-      ctx.fillText('斜率 = 普朗克常量 h（三线平行）', gL + 12, gT + 6);
+      ctx.fillText(L('斜率 = 普朗克常量 h（三线平行）', 'slope = Planck constant h (all parallel)'), gL + 12, gT + 6);
       const nuC = W0 / 4.136e-15, lamC = 1240 / W0;
-      readout.set(`
+      readout.set(L(`
         光子能量 E = 1240/λ = <b>${fmtN(E,2)} eV</b><br>
         逸出功 W₀ = <b>${W0} eV</b>，截止波长 λc = <b>${fmtN(lamC,0)} nm</b><br>
         ${emits
           ? `<span class="tag">发生光电效应 ✓</span><br>最大动能 Ek = hν − W₀ = <b>${fmtN(Ek,2)} eV</b><br>遏止电压 Uc = <b>${fmtN(Ek,2)} V</b>`
           : `<span class="warn">不发生光电效应（E &lt; W₀）</span><br>需要 λ &lt; ${fmtN(lamC,0)} nm 的光`}<br>
-        光强只改变<b>电子数目</b>，不改变 Ek,max`);
+        光强只改变<b>电子数目</b>，不改变 Ek,max`, `
+        Photon energy E = 1240/λ = <b>${fmtN(E,2)} eV</b><br>
+        Work function W₀ = <b>${W0} eV</b>, cutoff wavelength λc = <b>${fmtN(lamC,0)} nm</b><br>
+        ${emits
+          ? `<span class="tag">Photoemission occurs ✓</span><br>Max kinetic energy Ek = hν − W₀ = <b>${fmtN(Ek,2)} eV</b><br>Stopping voltage Uc = <b>${fmtN(Ek,2)} V</b>`
+          : `<span class="warn">No photoemission (E &lt; W₀)</span><br>Need light with λ &lt; ${fmtN(lamC,0)} nm`}<br>
+        Intensity changes the <b>number of electrons</b>, never Ek,max`));
     }
     [sl, si].forEach(s => s.onChange(draw));
     cv.onResize(draw);
