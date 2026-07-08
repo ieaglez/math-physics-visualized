@@ -3,13 +3,16 @@
 registerTopic({
   id: 'amgm', cat: 'math', icon: '⚖️',
   title: '基本不等式', en: 'AM–GM Inequality',
-  desc: '一张半圆图看懂 (a+b)/2 ≥ √(ab)：半径永远不小于半弦，取等仅当 a = b。',
+  desc: L('一张半圆图看懂 (a+b)/2 ≥ √(ab)：半径永远不小于半弦，取等仅当 a = b。',
+          'One semicircle explains (a+b)/2 ≥ √(ab): a radius is never shorter than a half-chord, with equality only when a = b.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '基本不等式', en: 'AM–GM Inequality (均值不等式)',
-      tagline: '蓝色半径 = 算术平均，绿色竖线 = 几何平均。把 a、b 调成相等，看看会发生什么。',
-      formula: '<span class="frac"><span>a + b</span><span class="den">2</span></span> ≥ √(ab)（a, b &gt; 0，当且仅当 a = b 取等号）',
-      explainHTML: `
+      tagline: L('蓝色半径 = 算术平均，绿色竖线 = 几何平均。把 a、b 调成相等，看看会发生什么。',
+                 'Blue radius = arithmetic mean; green vertical segment = geometric mean. Make a and b equal and see what happens.'),
+      formula: L('<span class="frac"><span>a + b</span><span class="den">2</span></span> ≥ √(ab)（a, b &gt; 0，当且仅当 a = b 取等号）',
+                 '<span class="frac"><span>a + b</span><span class="den">2</span></span> ≥ √(ab)　(a, b &gt; 0; equality iff a = b)'),
+      explainHTML: L(`
         <h2>两种平均数 <span class="en">Two Kinds of Means</span></h2>
         <ul>
           <li><span class="term">算术平均 <span class="en">(arithmetic mean)</span></span>：(a + b)/2 —— 普通意义的"平均"；</li>
@@ -29,12 +32,32 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 保持 a + b 大致不变（一个调大一个调小），观察 √(ab) 的变化 —— 越接近相等，√(ab) 越大；② 把 a、b 调成完全相等，两条线段重合，等号成立；③ 读数里还给出了完整的均值链：调和 ≤ 几何 ≤ 算术 ≤ 平方。</div>
         <div class="think"><b>思考一下：</b>用长 20 m 的篱笆围一块靠墙的矩形菜地（墙那边不用篱笆），怎样围面积最大？还是"取相等"吗？（提示：设垂直墙的边为 x，则 2x + y = 20。）</div>
-      `
+      `, `
+        <h2>Two Kinds of Means <span class="en">两种平均数</span></h2>
+        <ul>
+          <li><span class="term">Arithmetic mean <span class="en">(算术平均)</span></span>: (a + b)/2 — the everyday "average";</li>
+          <li><span class="term">Geometric mean <span class="en">(几何平均)</span></span>: √(ab) — the right "average" for growth rates and ratios.</li>
+        </ul>
+        <div class="formula"><span class="frac"><span>a + b</span><span class="den">2</span></span> ≥ √(ab)
+          <span class="note">Algebraic proof: expand (√a − √b)² ≥ 0. The geometric proof is the experiment above!</span></div>
+        <h2>A Proof in a Semicircle <span class="en">半圆里的证明</span></h2>
+        <p>Draw a semicircle with diameter a + b, so the radius is (a+b)/2. At the point C where the two segments meet, raise a perpendicular to the circle at D.
+        By the <span class="term">geometric mean relation <span class="en">(射影定理)</span></span>, CD = √(ab).
+        Since a chord's vertical segment can never exceed a radius, √(ab) ≤ (a+b)/2 — with equality when C slides to the center (a = b). A proof without words!</p>
+        <h2>Using It for Extremes <span class="en">怎么用它求最值</span></h2>
+        <ul>
+          <li><b>Fixed product → minimum sum</b>: if ab is fixed, a + b ≥ 2√(ab), minimized when a = b;</li>
+          <li><b>Fixed sum → maximum product</b>: if a + b is fixed, ab ≤ ((a+b)/2)² — among rectangles of given perimeter, the square has the largest area;</li>
+          <li>Checklist: positive values, a fixed quantity, and equality must be attainable.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Keep a + b roughly constant (raise one, lower the other) and watch √(ab) — the closer a and b are, the larger it gets; ② Make a = b exactly: the two segments coincide and equality holds; ③ The readout also shows the full chain: harmonic ≤ geometric ≤ arithmetic ≤ quadratic.</div>
+        <div class="think"><b>Think about it:</b> With 20 m of fence, enclose a rectangular garden against a wall (no fence needed on the wall side). What shape maximizes the area — is it still "make them equal"? (Hint: if the side perpendicular to the wall is x, then 2x + y = 20.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 440);
-    const sa = addSlider(panel, { label: '线段 a', en: 'segment', min: 0.5, max: 8, step: 0.1, value: 6 });
-    const sb = addSlider(panel, { label: '线段 b', en: 'segment', min: 0.5, max: 8, step: 0.1, value: 2 });
+    const sa = addSlider(panel, { label: L('线段 a', 'Segment a'), en: L('segment', '线段'), min: 0.5, max: 8, step: 0.1, value: 6 });
+    const sb = addSlider(panel, { label: L('线段 b', 'Segment b'), en: L('segment', '线段'), min: 0.5, max: 8, step: 0.1, value: 2 });
     const readout = addReadout(panel);
 
     function draw() {
@@ -58,7 +81,7 @@ registerTopic({
       plot.text((C_x + R) / 2, 0, 'b = ' + fmtN(b, 1), { color: C.orange, dy: 22, align: 'center', font: 'bold 13px sans-serif' });
       // 半径 OD'（斜着画到最高点方向？画竖直半径供对比）
       plot.seg(0, 0, 0, R, { color: C.blue, width: 3.5 });
-      plot.text(0, R / 2, '半径 (a+b)/2', { color: C.blue, dx: -10, align: 'right', font: 'bold 13px sans-serif' });
+      plot.text(0, R / 2, L('半径 (a+b)/2', 'radius (a+b)/2'), { color: C.blue, dx: -10, align: 'right', font: 'bold 13px sans-serif' });
       // CD = √(ab)
       const D_y = Math.sqrt(Math.max(R * R - C_x * C_x, 0));
       plot.seg(C_x, 0, C_x, D_y, { color: C.green, width: 3.5 });
@@ -82,13 +105,19 @@ registerTopic({
       });
       const eq = Math.abs(a - b) < 0.05;
       const hm = 2 / (1 / a + 1 / b), qm = Math.sqrt((a * a + b * b) / 2);
-      readout.set(`
+      readout.set(L(`
         算术平均 (a+b)/2 = <b style="color:${C.blue}">${fmtN(R,3)}</b><br>
         几何平均 √(ab) = <b style="color:${C.green}">${fmtN(gm,3)}</b><br>
         差值 = <b>${fmtN(R - gm,3)}</b>
         ${eq ? '<span class="tag">a = b：等号成立！</span>' : '（调成 a = b 试试）'}<br>
         完整均值链（调和≤几何≤算术≤平方）：<br>
-        <b>${fmtN(hm,2)}</b> ≤ <b>${fmtN(gm,2)}</b> ≤ <b>${fmtN(R,2)}</b> ≤ <b>${fmtN(qm,2)}</b> ✓`);
+        <b>${fmtN(hm,2)}</b> ≤ <b>${fmtN(gm,2)}</b> ≤ <b>${fmtN(R,2)}</b> ≤ <b>${fmtN(qm,2)}</b> ✓`, `
+        Arithmetic mean (a+b)/2 = <b style="color:${C.blue}">${fmtN(R,3)}</b><br>
+        Geometric mean √(ab) = <b style="color:${C.green}">${fmtN(gm,3)}</b><br>
+        Gap = <b>${fmtN(R - gm,3)}</b>
+        ${eq ? '<span class="tag">a = b: equality holds!</span>' : '(try making a = b)'}<br>
+        Full chain (harmonic ≤ geometric ≤ arithmetic ≤ quadratic):<br>
+        <b>${fmtN(hm,2)}</b> ≤ <b>${fmtN(gm,2)}</b> ≤ <b>${fmtN(R,2)}</b> ≤ <b>${fmtN(qm,2)}</b> ✓`));
     }
     [sa, sb].forEach(s => s.onChange(draw));
     cv.onResize(draw);
