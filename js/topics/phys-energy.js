@@ -3,13 +3,16 @@
 registerTopic({
   id: 'energy', cat: 'mech', icon: '⚖️',
   title: '机械能守恒（单摆）', en: 'Energy Conservation',
-  desc: '释放单摆，右侧能量条实时显示动能与势能此消彼长，总和恒定不变。',
+  desc: L('释放单摆，右侧能量条实时显示动能与势能此消彼长，总和恒定不变。',
+          'Release the pendulum and watch the energy bars trade kinetic for potential — while the total never changes.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '机械能守恒（单摆）', en: 'Conservation of Mechanical Energy',
-      tagline: '盯住右侧能量条：动能（绿）+ 势能（橙）= 总机械能（紫线），永远不变。',
-      formula: 'E = E<sub>k</sub> + E<sub>p</sub> = ½mv² + mgh = 常量　·　动能定理：W<sub>合</sub> = ΔE<sub>k</sub>',
-      explainHTML: `
+      tagline: L('盯住右侧能量条：动能（绿）+ 势能（橙）= 总机械能（紫线），永远不变。',
+                 'Watch the bars: kinetic (green) + potential (orange) = total mechanical energy (purple line), forever constant.'),
+      formula: L('E = E<sub>k</sub> + E<sub>p</sub> = ½mv² + mgh = 常量　·　动能定理：W<sub>合</sub> = ΔE<sub>k</sub>',
+                 'E = E<sub>k</sub> + E<sub>p</sub> = ½mv² + mgh = constant　·　Work–energy theorem: W<sub>net</sub> = ΔE<sub>k</sub>'),
+      explainHTML: L(`
         <h2>两种机械能 <span class="en">Two Forms of Mechanical Energy</span></h2>
         <ul>
           <li><span class="term">动能 <span class="en">(kinetic energy)</span></span>：E<sub>k</sub> = ½mv² —— 运动着就有；</li>
@@ -27,13 +30,31 @@ registerTopic({
           <span class="note">合外力做的功 = 动能的变化 —— 比牛顿定律更省事的"能量视角"</span></div>
         <div class="tip"><b>实验建议：</b>① 把初始角度调大，最低点速度变大了吗？读数里 v = √(2gΔh) 是否吻合；② 观察能量条：两端全是橙色（势能），最低点绿色（动能）最多，但总长度从不变化；③ 改变质量 m，摆动快慢变了吗？（不变 —— 能量都和 m 成正比，约掉了。）</div>
         <div class="think"><b>思考一下：</b>过山车第一个坡为什么必须最高？如果中途有个坡比起点还高，会发生什么？</div>
-      `
+      `, `
+        <h2>Two Forms of Mechanical Energy <span class="en">两种机械能</span></h2>
+        <ul>
+          <li><span class="term">Kinetic energy <span class="en">(动能)</span></span>: E<sub>k</sub> = ½mv² — anything moving has it;</li>
+          <li><span class="term">Gravitational potential energy <span class="en">(重力势能)</span></span>: E<sub>p</sub> = mgh — anything raised has it (h measured from the lowest point).</li>
+        </ul>
+        <h2>Conservation of Mechanical Energy <span class="en">机械能守恒定律</span></h2>
+        <div class="formula">When only gravity (or a spring) does work:　½mv₁² + mgh₁ = ½mv₂² + mgh₂</div>
+        <ul>
+          <li>At the <b>highest point</b>: v = 0 — all kinetic energy has become potential;</li>
+          <li>Through the <b>lowest point</b>: least potential, greatest speed — v = √(2gΔh), exactly as fast as free fall from that height!</li>
+          <li>Conditions: neglect air resistance and friction. With resistance, mechanical energy gradually turns into heat.</li>
+        </ul>
+        <h2>Work–Energy Theorem <span class="en">动能定理</span></h2>
+        <div class="formula">W<sub>net</sub> = ΔE<sub>k</sub> = ½mv₂² − ½mv₁²
+          <span class="note">The net work equals the change in kinetic energy — often a shortcut past Newton's laws</span></div>
+        <div class="tip"><b>Try this:</b> ① Increase the release angle — does the speed at the bottom grow? Check v = √(2gΔh) in the readout; ② Watch the bars: all orange at the ends, most green at the bottom, total length never changes; ③ Change the mass m — does the swing speed change? (No — every energy term is proportional to m, so it cancels.)</div>
+        <div class="think"><b>Think about it:</b> Why must a roller coaster's first hill be the tallest? What happens if a later hill is taller than the start?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 470);
-    const sL = addSlider(panel, { label: '摆长 L', en: 'length', min: 1, max: 3, step: 0.1, value: 2, unit: 'm' });
-    const sth0 = addSlider(panel, { label: '初始角度 θ₀', en: 'initial angle', min: 10, max: 75, step: 1, value: 50, unit: '°' });
-    const sm = addSlider(panel, { label: '质量 m', en: 'mass', min: 0.5, max: 3, step: 0.1, value: 1, unit: 'kg' });
+    const sL = addSlider(panel, { label: L('摆长 L', 'Length L'), en: L('length', '摆长'), min: 1, max: 3, step: 0.1, value: 2, unit: 'm' });
+    const sth0 = addSlider(panel, { label: L('初始角度 θ₀', 'Release angle θ₀'), en: L('initial angle', '初始角度'), min: 10, max: 75, step: 1, value: 50, unit: '°' });
+    const sm = addSlider(panel, { label: L('质量 m', 'Mass m'), en: L('mass', '质量'), min: 0.5, max: 3, step: 0.1, value: 1, unit: 'kg' });
     const readout = addReadout(panel);
     const g = 9.8;
     let th = sth0.value * DEG, om = 0; // 摆角与角速度（物理积分）
@@ -75,7 +96,7 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(px - 110, py + L * scale); ctx.lineTo(px + 130, py + L * scale); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = '#b45309'; ctx.font = '11px sans-serif';
-      ctx.fillText('h = 0（势能零点）', px + 70, py + L * scale + 16);
+      ctx.fillText(L('h = 0（势能零点）', 'h = 0 (PE reference)'), px + 70, py + L * scale + 16);
       // 摆线 + 球
       ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
@@ -97,7 +118,7 @@ registerTopic({
       const barX = W - 170, barW = 46, barB = H - 50, barH = H - 130;
       const sE = barH / Math.max(E0, 0.001);
       ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-      [[0, Ek, '#22c55e', '动能 Eₖ'], [1, Ep, '#fb923c', '势能 Eₚ']].forEach(([i, E, col, lb]) => {
+      [[0, Ek, '#22c55e', L('动能 Eₖ', 'Kinetic Eₖ')], [1, Ep, '#fb923c', L('势能 Eₚ', 'Potential Eₚ')]].forEach(([i, E, col, lb]) => {
         const x = barX + i * (barW + 30);
         ctx.fillStyle = '#f1f2fa';
         ctx.fillRect(x, barB - barH, barW, barH);
@@ -112,16 +133,22 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(barX - 16, barB - E0 * sE); ctx.lineTo(barX + barW * 2 + 46, barB - E0 * sE); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = C.purple;
-      ctx.fillText('总机械能 E = ' + fmtN(E0, 1) + ' J', barX + barW + 15, barB - E0 * sE - 8);
+      ctx.fillText(L('总机械能 E = ', 'Total E = ') + fmtN(E0, 1) + ' J', barX + barW + 15, barB - E0 * sE - 8);
       ctx.textAlign = 'left';
       const vMax = Math.sqrt(2 * g * L * (1 - Math.cos(th0)));
-      readout.set(`
+      readout.set(L(`
         当前摆角 θ = <b>${fmtN(th / DEG,1)}°</b>，高度 h = <b>${fmtN(h0,3)} m</b><br>
         动能 Eₖ = ½mv² = <b>${fmtN(Ek,2)} J</b><br>
         势能 Eₚ = mgh = <b>${fmtN(Ep,2)} J</b><br>
         Eₖ + Eₚ = <b style="color:${C.purple}">${fmtN(Ek + Ep,2)} J</b> ≈ E = ${fmtN(E0,2)} J ✓<br>
         最低点速度 v<sub>max</sub> = √(2gΔh) = <b>${fmtN(vMax,2)} m/s</b><br>
-        当前速度 v = <b>${fmtN(v,2)} m/s</b>`);
+        当前速度 v = <b>${fmtN(v,2)} m/s</b>`, `
+        Current angle θ = <b>${fmtN(th / DEG,1)}°</b>, height h = <b>${fmtN(h0,3)} m</b><br>
+        Kinetic Eₖ = ½mv² = <b>${fmtN(Ek,2)} J</b><br>
+        Potential Eₚ = mgh = <b>${fmtN(Ep,2)} J</b><br>
+        Eₖ + Eₚ = <b style="color:${C.purple}">${fmtN(Ek + Ep,2)} J</b> ≈ E = ${fmtN(E0,2)} J ✓<br>
+        Speed at the bottom v<sub>max</sub> = √(2gΔh) = <b>${fmtN(vMax,2)} m/s</b><br>
+        Current speed v = <b>${fmtN(v,2)} m/s</b>`));
     }
     sL.onChange(() => { resetState(); draw(); });
     sth0.onChange(() => { resetState(); draw(); });

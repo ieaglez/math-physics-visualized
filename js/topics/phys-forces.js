@@ -3,13 +3,16 @@
 registerTopic({
   id: 'forces', cat: 'mech', icon: '🪢',
   title: '力的合成与分解', en: 'Force Composition',
-  desc: '两个人拉一个物体，夹角越大越费劲？用平行四边形法则亲手验证。',
+  desc: L('两个人拉一个物体，夹角越大越费劲？用平行四边形法则亲手验证。',
+          'Two people pulling one object — does a wider angle really waste more effort? Verify with the parallelogram rule.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '力的合成与分解', en: 'Composition & Resolution of Forces',
-      tagline: '合力是平行四边形的对角线。保持 F₁、F₂ 不变，把夹角 θ 从 0° 拉到 180°，看合力如何缩水。',
-      formula: 'F<sub>合</sub> = √(F₁² + F₂² + 2F₁F₂cos θ)　·　|F₁−F₂| ≤ F<sub>合</sub> ≤ F₁+F₂',
-      explainHTML: `
+      tagline: L('合力是平行四边形的对角线。保持 F₁、F₂ 不变，把夹角 θ 从 0° 拉到 180°，看合力如何缩水。',
+                 'The resultant is the parallelogram\'s diagonal. Keep F₁, F₂ fixed and sweep θ from 0° to 180° — watch the resultant shrink.'),
+      formula: L('F<sub>合</sub> = √(F₁² + F₂² + 2F₁F₂cos θ)　·　|F₁−F₂| ≤ F<sub>合</sub> ≤ F₁+F₂',
+                 'F<sub>net</sub> = √(F₁² + F₂² + 2F₁F₂cos θ)　·　|F₁−F₂| ≤ F<sub>net</sub> ≤ F₁+F₂'),
+      explainHTML: L(`
         <h2>力是矢量 <span class="en">Force is a Vector</span></h2>
         <p>力既有大小又有方向，求"总效果"不能简单相加，要用<span class="term">平行四边形定则 <span class="en">(parallelogram rule)</span></span>：
         以 F₁、F₂ 为邻边作平行四边形，<span class="term">合力 <span class="en">(resultant force)</span></span>就是对角线。</p>
@@ -26,13 +29,32 @@ registerTopic({
         Fx = F·cos α，Fy = F·sin α（斜面问题里的 mg·sinθ、mg·cosθ 就是这么来的）。</p>
         <div class="tip"><b>实验建议：</b>① 设 F₁ = F₂，θ = 120°，读数显示合力恰好等于 F₁ —— 三个等大的力两两成 120° 可以平衡！② θ = 90° 验证勾股定理；③ 慢慢把 θ 拉到 180°，合力变成两力之差。</div>
         <div class="think"><b>思考一下：</b>晾衣绳中间挂了件衣服，为什么绳子绷得越直（越接近水平），绳中张力越大？大风天电线为什么不能绷得太紧？</div>
-      `
+      `, `
+        <h2>Force Is a Vector <span class="en">力是矢量</span></h2>
+        <p>A force has both magnitude and direction, so "total effect" isn't simple addition — use the
+        <span class="term">parallelogram rule <span class="en">(平行四边形定则)</span></span>:
+        build a parallelogram on F₁ and F₂; the <span class="term">resultant force <span class="en">(合力)</span></span> is the diagonal.</p>
+        <div class="formula">F<sub>net</sub>² = F₁² + F₂² + 2F₁F₂cos θ
+          <span class="note">θ is the angle between the forces. At θ = 90° it reduces to Pythagoras: F<sub>net</sub> = √(F₁²+F₂²)</span></div>
+        <h2>Range of the Resultant <span class="en">合力的范围</span></h2>
+        <ul>
+          <li>θ = 0° (same direction): F<sub>net</sub> = F₁ + F₂ — maximum;</li>
+          <li>θ = 180° (opposite): F<sub>net</sub> = |F₁ − F₂| — minimum;</li>
+          <li>The wider the angle, the smaller the resultant — carrying a bucket together, the farther apart your arms, the harder it is!</li>
+        </ul>
+        <h2>Resolution <span class="en">力的分解</span></h2>
+        <p>Resolution is composition in reverse: split one force into two components. Most useful is
+        <span class="term">orthogonal resolution <span class="en">(正交分解)</span></span>:
+        Fx = F·cos α, Fy = F·sin α — the mg·sinθ and mg·cosθ of incline problems come from exactly this.</p>
+        <div class="tip"><b>Try this:</b> ① Set F₁ = F₂ and θ = 120°: the readout shows the resultant exactly equals F₁ — three equal forces at 120° can balance! ② Verify Pythagoras at θ = 90°; ③ Sweep θ to 180° and watch the resultant become the difference of the two forces.</div>
+        <div class="think"><b>Think about it:</b> A shirt hangs at the middle of a clothesline. Why does the tension grow as the line is pulled straighter (closer to horizontal)? Why must power lines never be strung too tight before a windy day?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 450);
-    const sf1 = addSlider(panel, { label: '力 F₁', en: 'force', min: 10, max: 60, step: 1, value: 40, unit: 'N' });
-    const sf2 = addSlider(panel, { label: '力 F₂', en: 'force', min: 10, max: 60, step: 1, value: 30, unit: 'N' });
-    const sth = addSlider(panel, { label: '夹角 θ', en: 'angle between', min: 0, max: 180, step: 1, value: 60, unit: '°' });
+    const sf1 = addSlider(panel, { label: L('力 F₁', 'Force F₁'), en: L('force', '力'), min: 10, max: 60, step: 1, value: 40, unit: 'N' });
+    const sf2 = addSlider(panel, { label: L('力 F₂', 'Force F₂'), en: L('force', '力'), min: 10, max: 60, step: 1, value: 30, unit: 'N' });
+    const sth = addSlider(panel, { label: L('夹角 θ', 'Angle θ'), en: L('angle between', '夹角'), min: 0, max: 180, step: 1, value: 60, unit: '°' });
     const readout = addReadout(panel);
 
     function draw() {
@@ -63,18 +85,23 @@ registerTopic({
       // 三个力
       plot.arrow(0, 0, v1[0], v1[1], { color: C.blue, width: 3.2, label: 'F₁', labelDx: -26 });
       plot.arrow(0, 0, v2[0], v2[1], { color: C.red, width: 3.2, label: 'F₂' });
-      plot.arrow(0, 0, vr[0], vr[1], { color: C.green, width: 3.8, label: 'F合', labelDy: -8 });
+      plot.arrow(0, 0, vr[0], vr[1], { color: C.green, width: 3.8, label: L('F合', 'F_net'), labelDy: -8 });
       const special =
-        Math.abs(sth.value - 90) < 1 ? `<span class="tag">θ=90°：F合 = √(F₁²+F₂²)（勾股）</span>` :
-        Math.abs(sth.value - 120) < 1 && Math.abs(F1 - F2) < 1 ? '<span class="tag">等大成 120°：F合 = F₁！</span>' :
-        sth.value === 0 ? '<span class="tag">同向：F合 = F₁+F₂ 最大</span>' :
-        sth.value === 180 ? '<span class="tag">反向：F合 = |F₁−F₂| 最小</span>' : '';
-      readout.set(`
+        Math.abs(sth.value - 90) < 1 ? L(`<span class="tag">θ=90°：F合 = √(F₁²+F₂²)（勾股）</span>`, `<span class="tag">θ=90°: F_net = √(F₁²+F₂²) (Pythagoras)</span>`) :
+        Math.abs(sth.value - 120) < 1 && Math.abs(F1 - F2) < 1 ? L('<span class="tag">等大成 120°：F合 = F₁！</span>', '<span class="tag">Equal forces at 120°: F_net = F₁!</span>') :
+        sth.value === 0 ? L('<span class="tag">同向：F合 = F₁+F₂ 最大</span>', '<span class="tag">Same direction: F_net = F₁+F₂, maximum</span>') :
+        sth.value === 180 ? L('<span class="tag">反向：F合 = |F₁−F₂| 最小</span>', '<span class="tag">Opposite: F_net = |F₁−F₂|, minimum</span>') : '';
+      readout.set(L(`
         F合 = √(F₁²+F₂²+2F₁F₂cosθ)<br>
         　　= <b style="color:${C.green}">${fmtN(R,2)} N</b><br>
         理论范围：|F₁−F₂| = ${fmtN(Math.abs(F1-F2),0)} N ≤ F合 ≤ F₁+F₂ = ${fmtN(F1+F2,0)} N ✓<br>
         正交分解：F合x = <b>${fmtN(vr[0],1)}</b> N，F合y = <b>${fmtN(vr[1],1)}</b> N<br>
-        ${special}`);
+        ${special}`, `
+        F_net = √(F₁²+F₂²+2F₁F₂cosθ)<br>
+        　　= <b style="color:${C.green}">${fmtN(R,2)} N</b><br>
+        Range: |F₁−F₂| = ${fmtN(Math.abs(F1-F2),0)} N ≤ F_net ≤ F₁+F₂ = ${fmtN(F1+F2,0)} N ✓<br>
+        Components: F_x = <b>${fmtN(vr[0],1)}</b> N, F_y = <b>${fmtN(vr[1],1)}</b> N<br>
+        ${special}`));
     }
     [sf1, sf2, sth].forEach(s => s.onChange(draw));
     cv.onResize(draw);

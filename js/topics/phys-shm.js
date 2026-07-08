@@ -11,7 +11,7 @@ registerTopic({
       tagline: L('点击播放，上方是弹簧振子的真实运动，下方是位移-时间正弦曲线。',
                  'Press Play — the top shows the real motion of the spring oscillator, the bottom its displacement–time sine curve.'),
       formula: 'F = −kx　·　x = A·cos(ωt)　·　ω = √(k/m)　T = 2π√(m/k)',
-      explainHTML: `
+      explainHTML: L(`
         <h2>什么是简谐运动 <span class="en">What is SHM</span></h2>
         <p>物体受到的<span class="term">回复力 <span class="en">(restoring force)</span></span>与位移成正比、方向相反时，
         做<span class="term">简谐运动 <span class="en">(simple harmonic motion, SHM)</span></span>：</p>
@@ -31,13 +31,33 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 只调大振幅 A，周期 T 变了吗？（等时性！）② 把 m 调大 4 倍，T 变成几倍？（√4 = 2 倍）③ 观察振子经过中间平衡位置时最快、两端瞬间静止 —— 对应正弦曲线最陡和水平的地方。</div>
         <div class="think"><b>思考一下：</b>单摆 (simple pendulum) 在小角度下也是简谐运动，T = 2π√(L/g)。为什么摆钟可以用来计时？荡秋千越荡越高改变的是振幅还是周期？</div>
-      `
+      `, `
+        <h2>What Is SHM <span class="en">什么是简谐运动</span></h2>
+        <p>When the <span class="term">restoring force <span class="en">(回复力)</span></span> on an object is proportional to its displacement and points the opposite way, the object performs
+        <span class="term">simple harmonic motion <span class="en">(简谐运动, SHM)</span></span>:</p>
+        <div class="formula">F = −kx <span class="note">(k is the spring constant 劲度系数; the minus sign means the force always aims at the equilibrium position 平衡位置)</span></div>
+        <p>The displacement then varies sinusoidally in time — trigonometry again:</p>
+        <div class="formula">x(t) = A·cos(ωt + φ)　　ω = <span style="white-space:nowrap">√<span style="border-top:1.5px solid currentColor">k/m</span></span>　　T = <span class="frac"><span>2π</span><span class="den">ω</span></span> = 2π<span style="white-space:nowrap">√<span style="border-top:1.5px solid currentColor">m/k</span></span></div>
+        <ul>
+          <li><b>Amplitude <span class="en">(振幅)</span></b> A: the farthest distance from equilibrium, set by initial conditions;</li>
+          <li><b>Period <span class="en">(周期)</span></b> T: time for one full oscillation — <b>depends only on m and k, not on amplitude</b> (isochronism 等时性);</li>
+          <li><b>Frequency <span class="en">(频率)</span></b> f = 1/T; <b>angular frequency <span class="en">(角频率)</span></b> ω = 2πf.</li>
+        </ul>
+        <h2>The Energy View <span class="en">能量视角</span></h2>
+        <ul>
+          <li>At equilibrium: maximum speed, maximum kinetic energy, zero elastic PE;</li>
+          <li>At maximum displacement: momentarily at rest, maximum potential energy;</li>
+          <li>Total mechanical energy E = ½kA² is conserved, sloshing between kinetic and potential.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Increase only the amplitude A — does the period T change? (Isochronism!) ② Quadruple m — by what factor does T grow? (√4 = 2); ③ Watch: fastest through the middle, momentarily still at the ends — matching the steepest and flattest parts of the sine curve.</div>
+        <div class="think"><b>Think about it:</b> A simple pendulum (单摆) at small angles is also SHM, with T = 2π√(L/g). Why can a pendulum clock keep time? When you pump a swing higher, are you changing the amplitude or the period?</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 470);
-    const sk = addSlider(panel, { label: '劲度系数 k', en: 'spring constant', min: 2, max: 50, step: 1, value: 12, unit: 'N/m' });
-    const sm = addSlider(panel, { label: '质量 m', en: 'mass', min: 0.2, max: 5, step: 0.1, value: 1, unit: 'kg' });
-    const sA = addSlider(panel, { label: '振幅 A', en: 'amplitude', min: 0.3, max: 2, step: 0.05, value: 1.4, unit: 'm' });
+    const sk = addSlider(panel, { label: L('劲度系数 k', 'Spring constant k'), en: L('spring constant', '劲度系数'), min: 2, max: 50, step: 1, value: 12, unit: 'N/m' });
+    const sm = addSlider(panel, { label: L('质量 m', 'Mass m'), en: L('mass', '质量'), min: 0.2, max: 5, step: 0.1, value: 1, unit: 'kg' });
+    const sA = addSlider(panel, { label: L('振幅 A', 'Amplitude A'), en: L('amplitude', '振幅'), min: 0.3, max: 2, step: 0.05, value: 1.4, unit: 'm' });
     const readout = addReadout(panel);
     const anim = makeAnimator(() => draw());
     addPlayControls(panel, anim, { onReset: () => draw() });
@@ -68,7 +88,7 @@ registerTopic({
       ctx.beginPath(); ctx.moveTo(wallX, py + bs / 2 + 6); ctx.lineTo(W - 30, py + bs / 2 + 6); ctx.stroke();
       // 平衡位置 & 振幅边界
       ctx.strokeStyle = C.gray; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.4;
-      [[eqX, '平衡位置 O'], [eqX - A * scale, '−A'], [eqX + A * scale, '+A']].forEach(([X, lb], i) => {
+      [[eqX, L('平衡位置 O', 'equilibrium O')], [eqX - A * scale, '−A'], [eqX + A * scale, '+A']].forEach(([X, lb], i) => {
         ctx.beginPath(); ctx.moveTo(X, py - 56); ctx.lineTo(X, py + bs / 2 + 6); ctx.stroke();
         ctx.fillStyle = i ? C.orange : C.soft; ctx.font = '11.5px sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(lb, X, py - 62);
@@ -125,16 +145,22 @@ registerTopic({
       ctx.strokeStyle = C.green; ctx.lineWidth = 1.6;
       ctx.beginPath(); ctx.moveTo(GX(0), gT + 8); ctx.lineTo(GX(Math.min(T, TSHOW)), gT + 8); ctx.stroke();
       ctx.fillStyle = C.green; ctx.font = 'bold 11.5px sans-serif';
-      ctx.fillText('一个周期 T = ' + fmtN(T, 2) + ' s', GX(Math.min(T, TSHOW) / 2) - 40, gT + 2);
+      ctx.fillText(L('一个周期 T = ', 'one period T = ') + fmtN(T, 2) + ' s', GX(Math.min(T, TSHOW) / 2) - 40, gT + 2);
 
       const E = 0.5 * k * A * A;
-      readout.set(`
+      readout.set(L(`
         ω = √(k/m) = <b>${fmtN(w,3)} rad/s</b><br>
         周期 T = 2π√(m/k) = <b>${fmtN(T,2)} s</b>　频率 f = <b>${fmtN(1/T,2)} Hz</b><br>
         当前位移 x = <b>${fmtN(x,2)} m</b><br>
         当前速度 v = <b>${fmtN(v,2)} m/s</b>
         ${Math.abs(x) < 0.06 ? '<span class="tag">经过平衡位置：速度最大</span>' : Math.abs(Math.abs(x) - A) < 0.04 ? '<span class="tag">最大位移处：瞬时静止</span>' : ''}<br>
-        总机械能 E = ½kA² = <b>${fmtN(E,2)} J</b>（守恒）`);
+        总机械能 E = ½kA² = <b>${fmtN(E,2)} J</b>（守恒）`, `
+        ω = √(k/m) = <b>${fmtN(w,3)} rad/s</b><br>
+        Period T = 2π√(m/k) = <b>${fmtN(T,2)} s</b>　frequency f = <b>${fmtN(1/T,2)} Hz</b><br>
+        Displacement x = <b>${fmtN(x,2)} m</b><br>
+        Velocity v = <b>${fmtN(v,2)} m/s</b>
+        ${Math.abs(x) < 0.06 ? '<span class="tag">passing equilibrium: max speed</span>' : Math.abs(Math.abs(x) - A) < 0.04 ? '<span class="tag">at max displacement: momentarily still</span>' : ''}<br>
+        Total energy E = ½kA² = <b>${fmtN(E,2)} J</b> (conserved)`));
     }
     [sk, sm, sA].forEach(s => s.onChange(draw));
     cv.onResize(draw);

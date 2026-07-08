@@ -3,13 +3,16 @@
 registerTopic({
   id: 'gravity', cat: 'mech', icon: '🛰️',
   title: '万有引力与卫星', en: 'Gravitation & Orbits',
-  desc: '改变卫星轨道高度，看速度和周期如何变化 —— 轨道越高，飞得越慢，周期越长。',
+  desc: L('改变卫星轨道高度，看速度和周期如何变化 —— 轨道越高，飞得越慢，周期越长。',
+          'Raise or lower a satellite\'s orbit and watch speed and period respond — higher means slower and longer.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '万有引力与卫星', en: 'Universal Gravitation & Satellite Orbits',
-      tagline: '引力提供向心力。拖动轨道半径，找一找周期恰好 24 小时的"地球同步轨道"。',
-      formula: 'F = G<span class="frac"><span>Mm</span><span class="den">r²</span></span>　·　v = √(GM/r)　·　T² = <span class="frac"><span>4π²</span><span class="den">GM</span></span>r³（开普勒第三定律）',
-      explainHTML: `
+      tagline: L('引力提供向心力。拖动轨道半径，找一找周期恰好 24 小时的"地球同步轨道"。',
+                 'Gravity supplies the centripetal force. Drag the orbit radius and hunt for the 24-hour geostationary orbit.'),
+      formula: L('F = G<span class="frac"><span>Mm</span><span class="den">r²</span></span>　·　v = √(GM/r)　·　T² = <span class="frac"><span>4π²</span><span class="den">GM</span></span>r³（开普勒第三定律）',
+                 'F = G<span class="frac"><span>Mm</span><span class="den">r²</span></span>　·　v = √(GM/r)　·　T² = <span class="frac"><span>4π²</span><span class="den">GM</span></span>r³ (Kepler\'s third law)'),
+      explainHTML: L(`
         <h2>万有引力定律 <span class="en">Law of Universal Gravitation</span></h2>
         <div class="formula">F = G<span class="frac"><span>Mm</span><span class="den">r²</span></span>
           <span class="note">G = 6.67 × 10⁻¹¹ N·m²/kg²（引力常量，卡文迪许扭秤实验测得）</span></div>
@@ -27,12 +30,30 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 把 r 从 1.1 R⊕ 拉到 8 R⊕，看 v 从 7.6 km/s 一路下降；② 找到 T ≈ 24 h 的位置（约 6.6 R⊕）—— 这就是同步轨道；③ 读数里 T²/r³ 始终是同一个数，亲手验证开普勒第三定律。</div>
         <div class="think"><b>思考一下：</b>要把卫星送到更高轨道，火箭需要加速；但到了高轨道后卫星速度反而更小 —— 多出来的能量去哪了？（提示：引力势能）</div>
-      `
+      `, `
+        <h2>Law of Universal Gravitation <span class="en">万有引力定律</span></h2>
+        <div class="formula">F = G<span class="frac"><span>Mm</span><span class="den">r²</span></span>
+          <span class="note">G = 6.67 × 10⁻¹¹ N·m²/kg² (measured by Cavendish's torsion balance)</span></div>
+        <p>Any two masses attract, proportional to the product of masses and inversely to the square of distance — the falling apple and the orbiting Moon obey the same force!</p>
+        <h2>Why Satellites Don't Fall Down <span class="en">卫星为什么不掉下来</span></h2>
+        <p>A satellite <b>is falling all the time</b> — it just moves sideways so fast that its falling arc wraps around the Earth. Gravity is entirely spent as centripetal force:</p>
+        <div class="formula">G<span class="frac"><span>Mm</span><span class="den">r²</span></span> = <span class="frac"><span>mv²</span><span class="den">r</span></span> ⟹ v = <span style="white-space:nowrap">√<span style="border-top:1.5px solid currentColor">GM/r</span></span>
+          <span class="note">Higher orbit (larger r) → slower speed, longer period. First cosmic velocity v₁ = 7.9 km/s (skimming the ground)</span></div>
+        <h2>Kepler's Third Law <span class="en">开普勒第三定律</span></h2>
+        <div class="formula"><span class="frac"><span>T²</span><span class="den">r³</span></span> = <span class="frac"><span>4π²</span><span class="den">GM</span></span> = constant
+          <span class="note">Holds for every satellite of the same central body — independent of the satellite's own mass</span></div>
+        <ul>
+          <li><b>Geostationary satellites <span class="en">(同步卫星)</span></b>: T = 24 h, necessarily above the equator at about 35,800 km (r ≈ 6.6 R⊕);</li>
+          <li>Low orbits: T ≈ 90 min (the space station); the Moon: r ≈ 60 R⊕, T ≈ 27.3 days — all consistent with T² ∝ r³.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Sweep r from 1.1 R⊕ to 8 R⊕ and watch v fall from 7.6 km/s; ② Find the spot where T ≈ 24 h (about 6.6 R⊕) — that's the geostationary orbit; ③ The readout's T²/r³ never changes — Kepler's third law verified by hand.</div>
+        <div class="think"><b>Think about it:</b> To reach a higher orbit a rocket must speed up, yet the satellite ends up moving slower — where did the extra energy go? (Hint: gravitational potential energy.)</div>
+      `)
     });
 
     const GM = 3.986e14, RE = 6.371e6; // 地球
     const cv = createCanvas(canvasBox, 460);
-    const sr = addSlider(panel, { label: '轨道半径 r', en: 'orbit radius', min: 1.1, max: 8, step: 0.05, value: 2.5, unit: 'R⊕' });
+    const sr = addSlider(panel, { label: L('轨道半径 r', 'Orbit radius r'), en: L('orbit radius', '轨道半径'), min: 1.1, max: 8, step: 0.05, value: 2.5, unit: 'R⊕' });
     const readout = addReadout(panel);
     const anim = makeAnimator(() => draw());
     addPlayControls(panel, anim, { onReset: () => draw() });
@@ -65,14 +86,14 @@ registerTopic({
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(plot.X(0), plot.Y(0), eR, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('地球', plot.X(0), plot.Y(0) + 4);
+      ctx.fillText(L('地球', 'Earth'), plot.X(0), plot.Y(0) + 4);
       ctx.textAlign = 'left';
       // 同步轨道参考圈
       ctx.save();
       ctx.strokeStyle = 'rgba(250,204,21,.35)'; ctx.lineWidth = 1.4; ctx.setLineDash([4, 6]);
       ctx.beginPath(); ctx.arc(plot.X(0), plot.Y(0), eR * 6.6, 0, Math.PI * 2); ctx.stroke();
       ctx.fillStyle = 'rgba(250,204,21,.7)'; ctx.font = '11px sans-serif';
-      ctx.fillText('同步轨道 6.6R⊕', plot.X(0) + eR * 6.6 * 0.71, plot.Y(0) - eR * 6.6 * 0.71);
+      ctx.fillText(L('同步轨道 6.6R⊕', 'geostationary 6.6R⊕'), plot.X(0) + eR * 6.6 * 0.71, plot.Y(0) - eR * 6.6 * 0.71);
       ctx.restore();
       // 卫星轨道
       ctx.save();
@@ -83,7 +104,7 @@ registerTopic({
       // 引力箭头 + 速度箭头
       const fLen = Math.min(2.2, 3.4 / (rR * rR) + 0.5);
       pxArrow(ctx, plot.X(P[0]), plot.Y(P[1]), plot.X(P[0] * (1 - fLen / rR)), plot.Y(P[1] * (1 - fLen / rR)),
-        { color: '#f87171', width: 2.6, label: 'F引', labelDx: 8, labelDy: 16 });
+        { color: '#f87171', width: 2.6, label: L('F引', 'F_grav'), labelDx: 8, labelDy: 16 });
       const vLen = v / 7900 * 1.6;
       pxArrow(ctx, plot.X(P[0]), plot.Y(P[1]), plot.X(P[0] - Math.sin(th) * vLen), plot.Y(P[1] + Math.cos(th) * vLen),
         { color: '#4ade80', width: 2.6, label: 'v', labelDy: -8 });
@@ -93,13 +114,19 @@ registerTopic({
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
       const Th = T / 3600;
       const kepler = (T * T) / Math.pow(r, 3);
-      readout.set(`
+      readout.set(L(`
         轨道半径 r = <b>${fmtN(rR,2)} R⊕</b> = ${fmtN(r/1e6,0)}×10⁶ m<br>
         轨道速度 v = √(GM/r) = <b>${fmtN(v/1000,2)} km/s</b><br>
         周期 T = <b>${Th < 48 ? fmtN(Th,2) + ' 小时' : fmtN(Th/24,2) + ' 天'}</b>
         ${Math.abs(Th - 24) < 1 ? '<span class="tag">≈24h 同步轨道！</span>' : ''}<br>
         向心加速度 a = GM/r² = <b>${fmtN(GM/(r*r),2)} m/s²</b><br>
-        开普勒验证 T²/r³ = <b>${fmtN(kepler * 1e14,3)}</b>×10⁻¹⁴（恒定 ✓）`);
+        开普勒验证 T²/r³ = <b>${fmtN(kepler * 1e14,3)}</b>×10⁻¹⁴（恒定 ✓）`, `
+        Orbit radius r = <b>${fmtN(rR,2)} R⊕</b> = ${fmtN(r/1e6,0)}×10⁶ m<br>
+        Orbital speed v = √(GM/r) = <b>${fmtN(v/1000,2)} km/s</b><br>
+        Period T = <b>${Th < 48 ? fmtN(Th,2) + ' h' : fmtN(Th/24,2) + ' days'}</b>
+        ${Math.abs(Th - 24) < 1 ? '<span class="tag">≈24 h: geostationary!</span>' : ''}<br>
+        Centripetal acceleration a = GM/r² = <b>${fmtN(GM/(r*r),2)} m/s²</b><br>
+        Kepler check T²/r³ = <b>${fmtN(kepler * 1e14,3)}</b>×10⁻¹⁴ (constant ✓)`));
     }
     sr.onChange(draw);
     cv.onResize(draw);

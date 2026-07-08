@@ -3,13 +3,15 @@
 registerTopic({
   id: 'kinematics', cat: 'mech', icon: '🚗',
   title: '匀变速直线运动', en: 'Uniform Acceleration',
-  desc: '设置初速度和加速度，播放小车运动动画，同步观察 x–t 图象与 v–t 图象。',
+  desc: L('设置初速度和加速度，播放小车运动动画，同步观察 x–t 图象与 v–t 图象。',
+          'Set the initial velocity and acceleration, play the car animation, and watch the x–t and v–t graphs draw themselves.'),
   render(root) {
     const { canvasBox, panel } = topicPage(root, {
       title: '匀变速直线运动', en: 'Uniformly Accelerated Linear Motion',
-      tagline: '上方是小车的真实运动，下方是同步绘制的 x–t 与 v–t 图象。',
+      tagline: L('上方是小车的真实运动，下方是同步绘制的 x–t 与 v–t 图象。',
+                 'Top: the car\'s actual motion. Bottom: its x–t and v–t graphs, drawn in sync.'),
       formula: 'v = v₀ + at　·　x = v₀t + ½at<sup>2</sup>　·　v<sup>2</sup> − v₀<sup>2</sup> = 2ax',
-      explainHTML: `
+      explainHTML: L(`
         <h2>三个基本公式 <span class="en">Kinematic Equations</span></h2>
         <p>当物体沿直线运动且<span class="term">加速度 <span class="en">(acceleration)</span></span> a 恒定时：</p>
         <div class="formula">
@@ -27,13 +29,31 @@ registerTopic({
         </ul>
         <div class="tip"><b>实验建议：</b>① 设 v₀ = 10, a = −2（类似刹车+倒车），播放后观察小车先冲后退，x–t 图象出现最高点 —— 那一刻 v = 0；② 设 a = 0，两个图象分别变成什么形状？③ 对照 v–t 直线下方的面积和 x 的读数，验证“面积=位移”。</div>
         <div class="think"><b>思考一下：</b>自由落体 (free fall) 是匀变速运动的特例：v₀ = 0，a = g ≈ 9.8 m/s²。把参数调成这样，1 秒、2 秒、3 秒内下落的距离之比是多少？（提示：1 : 4 : 9）</div>
-      `
+      `, `
+        <h2>The Kinematic Equations <span class="en">三个基本公式</span></h2>
+        <p>When an object moves in a straight line with constant <span class="term">acceleration <span class="en">(加速度)</span></span> a:</p>
+        <div class="formula">
+          v = v₀ + at　　x = v₀t + <span class="frac"><span>1</span><span class="den">2</span></span>at<sup>2</sup>　　v<sup>2</sup> − v₀<sup>2</sup> = 2ax
+        </div>
+        <ul>
+          <li>v₀: the <span class="term">initial velocity <span class="en">(初速度)</span></span>; v: the instantaneous velocity at time t; x: displacement (位移).</li>
+          <li>The third equation has no t — perfect for problems that "don't ask about time".</li>
+        </ul>
+        <h2>Reading Motion Graphs <span class="en">读懂运动图象</span></h2>
+        <ul>
+          <li><b>The v–t graph</b> is a <b>straight line</b>: its slope is the acceleration a, and the "area" between it and the t-axis is the displacement x. That area is the key to the second equation: trapezoid area = (v₀+v)t/2;</li>
+          <li><b>The x–t graph</b> is a <b>parabola</b> (when a ≠ 0): the slope of its tangent at any point is the velocity at that moment — the physical meaning of the derivative!</li>
+          <li>If a and v₀ share a sign the object speeds up; opposite signs mean it slows, stops (v = 0), then reverses — watch the "turnaround" in the x–t graph.</li>
+        </ul>
+        <div class="tip"><b>Try this:</b> ① Set v₀ = 10, a = −2 (braking then reversing): the car surges, stops, backs up, and the x–t graph peaks — that instant is v = 0; ② Set a = 0 — what do the two graphs become? ③ Compare the shaded area under the v–t line with the x readout: area = displacement.</div>
+        <div class="think"><b>Think about it:</b> Free fall (自由落体) is the special case v₀ = 0, a = g ≈ 9.8 m/s². Set that up: what's the ratio of distances fallen in 1 s, 2 s, 3 s? (Hint: 1 : 4 : 9.)</div>
+      `)
     });
 
     const cv = createCanvas(canvasBox, 470);
-    const sv0 = addSlider(panel, { label: '初速度 v₀', en: 'initial velocity', min: -10, max: 15, step: 0.5, value: 10, unit: 'm/s' });
-    const sa = addSlider(panel, { label: '加速度 a', en: 'acceleration', min: -5, max: 5, step: 0.1, value: -2, unit: 'm/s²' });
-    const st = addSlider(panel, { label: '时间 t', en: 'time', min: 0, max: 10, step: 0.05, value: 0, unit: 's' });
+    const sv0 = addSlider(panel, { label: L('初速度 v₀', 'Initial velocity v₀'), en: L('initial velocity', '初速度'), min: -10, max: 15, step: 0.5, value: 10, unit: 'm/s' });
+    const sa = addSlider(panel, { label: L('加速度 a', 'Acceleration a'), en: L('acceleration', '加速度'), min: -5, max: 5, step: 0.1, value: -2, unit: 'm/s²' });
+    const st = addSlider(panel, { label: L('时间 t', 'Time t'), en: L('time', '时间'), min: 0, max: 10, step: 0.05, value: 0, unit: 's' });
     const readout = addReadout(panel);
     const anim = makeAnimator(dt => {
       let t = st.value + dt;
@@ -88,8 +108,8 @@ registerTopic({
       // —— 下：x–t 与 v–t 图象 ——
       const gTop = 120, gH = H - gTop - 14, gW = (W - 70) / 2;
       const graphs = [
-        { x0: 40, f: xOf, color: C.blue, name: 'x–t 图象（抛物线）', unit: 'm' },
-        { x0: 70 + gW, f: vOf, color: C.red, name: 'v–t 图象（直线，斜率=a）', unit: 'm/s' }
+        { x0: 40, f: xOf, color: C.blue, name: L('x–t 图象（抛物线）', 'x–t graph (parabola)'), unit: 'm' },
+        { x0: 70 + gW, f: vOf, color: C.red, name: L('v–t 图象（直线，斜率=a）', 'v–t graph (line, slope = a)'), unit: 'm/s' }
       ];
       graphs.forEach(g => {
         let lo = 0, hi = 1;
@@ -121,13 +141,19 @@ registerTopic({
         ctx.beginPath(); ctx.arc(GX(t), GY(g.f(t)), 5.5, 0, Math.PI * 2); ctx.fill();
       });
 
-      readout.set(`
+      readout.set(L(`
         t = <b>${fmtN(t,2)} s</b><br>
         位移 x = v₀t + ½at² = <b>${fmtN(xOf(t),2)} m</b><br>
         速度 v = v₀ + at = <b>${fmtN(v,2)} m/s</b><br>
         ${(sv0.value !== 0 && sa.value !== 0 && sv0.value * sa.value < 0) ?
           `v = 0 的时刻：t = <b>${fmtN(-sv0.value / sa.value,2)} s</b>（运动折返点）<br>` : ''}
-        v–t 图中红色阴影面积 = 位移 x ✓`);
+        v–t 图中红色阴影面积 = 位移 x ✓`, `
+        t = <b>${fmtN(t,2)} s</b><br>
+        Displacement x = v₀t + ½at² = <b>${fmtN(xOf(t),2)} m</b><br>
+        Velocity v = v₀ + at = <b>${fmtN(v,2)} m/s</b><br>
+        ${(sv0.value !== 0 && sa.value !== 0 && sv0.value * sa.value < 0) ?
+          `Moment when v = 0: t = <b>${fmtN(-sv0.value / sa.value,2)} s</b> (the turnaround)<br>` : ''}
+        Red shaded area in the v–t graph = displacement x ✓`));
     }
     [sv0, sa, st].forEach(s => s.onChange(draw));
     cv.onResize(draw);
