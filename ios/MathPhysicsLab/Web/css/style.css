@@ -236,6 +236,7 @@ input[type=range]::-moz-range-thumb {
   margin-top: 4px; padding: 12px 14px;
   background: #f4f5fd; border: 1px solid #e8e9f8; border-radius: 13px;
   font-size: 12.8px; line-height: 1.95;
+  font-variant-numeric: tabular-nums;  /* 等宽数字：位数相同则宽度恒定，减少行内跳动 */
 }
 .readout b { font-variant-numeric: tabular-nums; color: #221d56; }
 .readout .tag {

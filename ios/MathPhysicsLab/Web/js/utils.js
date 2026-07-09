@@ -315,7 +315,16 @@ function addReadout(panel, title) {
   panel.appendChild(h('div', 'panel-title', title));
   const d = h('div', 'readout');
   panel.appendChild(d);
-  return { set(html) { d.innerHTML = html; } };
+  // 动画播放时内容长短变化会改变换行数，导致面板高度抖动；
+  // 锁定曾达到的最大高度（只增不减），保持下方按钮位置稳定。
+  let maxH = 0;
+  return {
+    set(html) {
+      d.innerHTML = html;
+      const sh = d.scrollHeight;
+      if (sh > maxH) { maxH = sh; d.style.minHeight = maxH + 'px'; }
+    }
+  };
 }
 
 /* ---------- 动画器 ---------- */
