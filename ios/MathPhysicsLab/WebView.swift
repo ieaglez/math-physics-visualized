@@ -27,6 +27,19 @@ struct WebView: UIViewRepresentable {
     func updateUIView(_ uiView: WKWebView, context: Context) {}
 
     final class Coordinator: NSObject, WKNavigationDelegate {
+        /// 截图/调试直达入口：`simctl launch ... -page trig -autoplay 1`
+        /// 正常用户启动时无这些参数，行为不变。
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            let ud = UserDefaults.standard
+            guard let page = ud.string(forKey: "page"), !page.isEmpty else { return }
+            var js = "location.hash='#\(page)';"
+            if ud.bool(forKey: "autoplay") {
+                js += "setTimeout(()=>{const b=[...document.querySelectorAll('.btn-row .btn')]"
+                js += ".find(x=>/播放|Play/.test(x.textContent));b&&b.click();},600);"
+            }
+            webView.evaluateJavaScript(js, completionHandler: nil)
+        }
+
         /// 站内是 file:// + hash 路由；任何 http(s) 页面跳转都交给系统浏览器，
         /// 保证 App 内容始终是打包的离线内容（也符合审核预期）。
         func webView(_ webView: WKWebView,
