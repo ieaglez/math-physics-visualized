@@ -1,7 +1,7 @@
 'use strict';
 /* ===== 二次函数 Quadratic Function ===== */
 registerTopic({
-  id: 'quadratic', cat: 'math', icon: '📈',
+  id: 'quadratic', cat: 'math', icon: '📈', stage: 'both',
   title: '二次函数', en: 'Quadratic Function',
   desc: L('拖动 a、b、c 三个系数，观察抛物线的开口、顶点、对称轴和零点如何变化。',
           'Drag the coefficients a, b, c and watch the parabola\'s opening, vertex, axis of symmetry and roots respond.'),
