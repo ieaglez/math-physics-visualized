@@ -316,13 +316,15 @@ function addReadout(panel, title) {
   const d = h('div', 'readout');
   panel.appendChild(d);
   // 动画播放时内容长短变化会改变换行数，导致面板高度抖动；
-  // 锁定曾达到的最大高度（只增不减），保持下方按钮位置稳定。
+  // 锁定曾达到的最大高度（只增不减），与 border-box 的 min-height 同口径。
+  // 用 getBoundingClientRect 的亚像素高度向上取整：offsetHeight 的整数
+  // 舍入会在 .5px 边缘来回跳 1px。
   let maxH = 0;
   return {
     set(html) {
       d.innerHTML = html;
-      const sh = d.scrollHeight;
-      if (sh > maxH) { maxH = sh; d.style.minHeight = maxH + 'px'; }
+      const oh = Math.ceil(d.getBoundingClientRect().height);
+      if (oh > maxH) { maxH = oh; d.style.minHeight = maxH + 'px'; }
     }
   };
 }
@@ -378,6 +380,11 @@ function addPlayControls(panel, anim, { onReset } = {}) {
   play.onclick = () => { anim.toggle(); sync(); };
   reset.onclick = () => { anim.stop(); anim.t = 0; sync(); if (onReset) onReset(); };
   row.append(play, reset);
-  panel.appendChild(row);
+  // 统一把按钮放在"实时读数"上方：读数内容每帧变化，任何高度波动
+  // 都不应牵动操作按钮的位置（按钮位置稳定 = 用户不点错）。
+  const roTitles = panel.querySelectorAll('.panel-title');
+  const roTitle = [...roTitles].find(t => t.textContent.includes('READOUT') || t.textContent.includes('实时读数'));
+  if (roTitle) panel.insertBefore(row, roTitle);
+  else panel.appendChild(row);
   return { sync };
 }
