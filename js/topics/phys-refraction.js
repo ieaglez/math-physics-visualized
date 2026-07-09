@@ -1,7 +1,7 @@
 'use strict';
 /* ===== 光的折射与全反射 Refraction & Total Internal Reflection ===== */
 registerTopic({
-  id: 'refraction', cat: 'optics', icon: '🌈',
+  id: 'refraction', cat: 'optics', icon: '🌈', stage: 'both',
   title: '光的折射与全反射', en: 'Refraction & TIR',
   desc: L('调节入射角和折射率，验证斯涅尔定律；让光从水中射向空气，找到全反射的临界角。',
           'Tune the incidence angle and refractive index to verify Snell\'s law — then send light from water to air and find the critical angle.'),

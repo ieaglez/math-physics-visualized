@@ -60,16 +60,22 @@ body {
 .brand-title { font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
 .brand-sub { font-size: 10.5px; color: var(--ink-soft); letter-spacing: .04em; font-weight: 600; }
 
-#lang-toggle {
+#lang-toggle, #stage-toggle {
   display: flex; gap: 4px; margin: 4px 14px 0;
   background: #eef0f9; border-radius: 10px; padding: 3px;
 }
-#lang-toggle button {
+#stage-toggle { margin-top: 6px; }
+#lang-toggle button, #stage-toggle button {
   flex: 1; padding: 5px 6px; font-size: 12px; font-weight: 800;
   border: none; border-radius: 8px; background: transparent;
   color: var(--ink-soft); cursor: pointer; font-family: var(--font-sans);
 }
-#lang-toggle button.on { background: #fff; color: var(--primary-deep); box-shadow: 0 1px 4px rgba(23,25,60,.12); }
+#lang-toggle button.on, #stage-toggle button.on { background: #fff; color: var(--primary-deep); box-shadow: 0 1px 4px rgba(23,25,60,.12); }
+
+/* 初中标识 */
+.jr-badge { background: #fff7ed; color: #c2410c; }
+.path-stage.stage-junior .path-num { background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: 0 8px 18px -6px rgba(234,88,12,.5); }
+.path-stage.stage-junior.stage-done .path-num { background: linear-gradient(135deg, #10b981, #059669); }
 
 #nav { padding: 4px 14px 12px; flex: 1; }
 .nav-cat {

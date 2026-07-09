@@ -1,7 +1,7 @@
 'use strict';
 /* ===== 欧姆定律与电路 Ohm's Law & Circuits ===== */
 registerTopic({
-  id: 'circuit', cat: 'optics', icon: '🔋',
+  id: 'circuit', cat: 'optics', icon: '🔋', stage: 'both',
   title: '欧姆定律与电路', en: "Ohm's Law & Circuits",
   desc: L('切换串联/并联，调节电压与电阻，观察电流、分压分流和小灯泡的亮度变化。',
           'Switch series/parallel, tune voltage and resistances, and watch currents, voltage division and bulb brightness respond.'),

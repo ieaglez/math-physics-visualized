@@ -1,7 +1,7 @@
 'use strict';
 /* ===== 凸透镜成像 Convex Lens Imaging ===== */
 registerTopic({
-  id: 'lens', cat: 'optics', icon: '🔍',
+  id: 'lens', cat: 'optics', icon: '🔍', stage: 'both',
   title: '凸透镜成像', en: 'Convex Lens Imaging',
   desc: L('移动物体、改变焦距，用三条特殊光线作图，观察实像与虚像如何形成。',
           'Move the object, change the focal length, and watch the three principal rays form real and virtual images.'),

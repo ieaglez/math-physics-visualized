@@ -1,5 +1,5 @@
 'use strict';
-/* ===== 应用框架：导航 + 路由 + 首页 + 学习路径 + 进度 + 双语 ===== */
+/* ===== 应用框架：导航 + 路由 + 首页 + 学习路径 + 进度 + 双语 + 学段 ===== */
 
 const CATEGORIES = [
   { id: 'math',   name: L('数学 · 函数与几何', 'Math · Functions & Geometry'),        en: L('Functions & Geometry', '函数与几何') },
@@ -10,44 +10,71 @@ const CATEGORIES = [
 CATEGORIES[0].color = '#7c3aed'; CATEGORIES[1].color = '#ea580c';
 CATEGORIES[2].color = '#0891b2'; CATEGORIES[3].color = '#059669';
 
-/* ---------- 学习路径：8 站 ---------- */
+/* ---------- 学段 Stage（topic.stage: 'junior' | 'senior' | 'both'，缺省视为 senior）---------- */
+const STAGE_KEY = 'mpv_stage';
+function getStage() {
+  try { return localStorage.getItem(STAGE_KEY) || 'all'; } catch (e) { return 'all'; }
+}
+function setStageFilter(s) {
+  try { localStorage.setItem(STAGE_KEY, s); } catch (e) {}
+  buildStageToggle();
+  buildNav();
+  route();
+}
+const stageOfTopic = t => t.stage || 'senior';
+function inStage(t) {
+  const s = getStage();
+  return s === 'all' || stageOfTopic(t) === s || stageOfTopic(t) === 'both';
+}
+
+/* ---------- 学习路径：初中 2 站 + 高中 8 站 ---------- */
 const LEARNING_PATH = [
-  { grade: L('高一 · 上', 'Grade 10 · Fall'),
+  { stage: 'junior', grade: L('初中', 'Middle School'),
+    title: L('初中数学：函数与几何的种子', 'Middle-School Math: Seeds of Functions & Geometry'),
+    desc: L('一次函数是所有函数的第一课，勾股定理是几何的第一块基石 —— 高中的一切都从这里长出来。',
+            'The linear function is lesson one of all functions, and the Pythagorean theorem is geometry\'s first cornerstone — everything in high school grows from here.'),
+    items: ['linear', 'inverse', 'linsys', 'pythagoras'] },
+  { stage: 'junior', grade: L('初中', 'Middle School'),
+    title: L('初中物理：声、光、力的初体验', 'Middle-School Physics: First Taste of Sound, Light & Forces'),
+    desc: L('用波形"看见"声音，用光路图理解镜子，用浮力和杠杆感受力的规律。凸透镜成像和欧姆定律见第 8、9 站，初中阶段同样适用。',
+            'See sound as waveforms, understand mirrors through ray diagrams, and feel the rules of force via buoyancy and levers. Lens imaging and Ohm\'s law (stops 8–9) fit middle school too.'),
+    items: ['sound', 'mirror', 'buoyancy', 'lever'] },
+  { stage: 'senior', grade: L('高一 · 上', 'Grade 10 · Fall'),
     title: L('数学起步：从集合到函数', 'Math Foundations: Sets to Functions'),
     desc: L('先学会数学的"语言"（集合），再认识两类最重要的函数 —— 这是后面一切的地基。',
             'Learn the "language" of math (sets) first, then meet the two most important families of functions — the foundation for everything ahead.'),
     items: ['sets', 'quadratic', 'amgm', 'explog'] },
-  { grade: L('高一 · 上', 'Grade 10 · Fall'),
+  { stage: 'senior', grade: L('高一 · 上', 'Grade 10 · Fall'),
     title: L('物理起步：运动与力', 'Physics Foundations: Motion & Forces'),
     desc: L('描述运动（怎么动）→ 分析受力（为什么这么动）。牛顿力学的两大支柱。',
             'Describe motion (how things move), then analyze forces (why they move that way) — the two pillars of Newtonian mechanics.'),
     items: ['kinematics', 'forces', 'incline'] },
-  { grade: L('高一 · 下', 'Grade 10 · Spring'),
+  { stage: 'senior', grade: L('高一 · 下', 'Grade 10 · Spring'),
     title: L('三角与向量：旋转的数学', 'Trigonometry & Vectors: The Math of Rotation'),
     desc: L('单位圆是三角函数的家。向量和复数则把"方向"变成可以计算的对象。',
             'The unit circle is home to the trig functions. Vectors and complex numbers turn "direction" into something you can compute with.'),
     items: ['trig', 'transform', 'triangle', 'vector', 'complex'] },
-  { grade: L('高一 · 下', 'Grade 10 · Spring'),
+  { stage: 'senior', grade: L('高一 · 下', 'Grade 10 · Spring'),
     title: L('曲线运动 · 能量 · 动量', 'Curved Motion · Energy · Momentum'),
     desc: L('运动不再是直线：抛体、圆周、天体。再用能量和动量两大守恒律俯瞰全局。',
             'Motion leaves the straight line: projectiles, circles, orbits. Then survey it all through the two great conservation laws — energy and momentum.'),
     items: ['projectile', 'circular', 'gravity', 'energy', 'momentum'] },
-  { grade: L('高二', 'Grade 11'),
+  { stage: 'senior', grade: L('高二', 'Grade 11'),
     title: L('几何与代数进阶', 'Advanced Geometry & Algebra'),
     desc: L('立体几何练空间想象；解析几何用代数"算"几何；数列和导数打开高等数学的门。',
             'Solid geometry trains spatial thinking; analytic geometry computes shapes with algebra; sequences and derivatives open the door to higher math.'),
     items: ['solids', 'linecircle', 'ellipse', 'conics2', 'sequence', 'derivative'] },
-  { grade: L('高二', 'Grade 11'),
+  { stage: 'senior', grade: L('高二', 'Grade 11'),
     title: L('电与磁', 'Electricity & Magnetism'),
     desc: L('从静电力到电路，再到磁场和电磁感应 —— 现代文明的全部电力都从这里来。',
             'From electrostatic forces to circuits, magnetic fields and induction — every watt of modern civilization starts here.'),
     items: ['coulomb', 'circuit', 'lorentz', 'induction', 'ac'] },
-  { grade: L('高二 · 高三', 'Grade 11–12'),
+  { stage: 'senior', grade: L('高二 · 高三', 'Grade 11–12'),
     title: L('振动 · 波 · 光', 'Oscillations · Waves · Light'),
     desc: L('简谐运动是一切振动的原型，波把振动传向远方，光的干涉揭示了它的波动本性。',
             'Simple harmonic motion is the prototype of all vibration; waves carry it outward; interference reveals the wave nature of light.'),
     items: ['shm', 'wave', 'refraction', 'lens', 'interference'] },
-  { grade: L('高三', 'Grade 12'),
+  { stage: 'senior', grade: L('高三', 'Grade 12'),
     title: L('概率统计与近代物理', 'Probability, Statistics & Modern Physics'),
     desc: L('用分布描述随机世界；再走进 20 世纪：气体分子、光量子、原子能级。',
             'Describe randomness with distributions, then step into the 20th century: gas molecules, light quanta, atomic energy levels.'),
@@ -56,18 +83,20 @@ const LEARNING_PATH = [
 
 /* 前置知识 */
 const PREREQS = {
-  amgm: ['quadratic'], explog: ['quadratic'],
-  trig: ['quadratic'], transform: ['trig'], triangle: ['trig'], vector: ['trig'],
+  inverse: ['linear'], linsys: ['linear'],
+  quadratic: ['linear'], amgm: ['quadratic'], explog: ['quadratic'],
+  trig: ['quadratic', 'pythagoras'], transform: ['trig'], triangle: ['trig'], vector: ['trig'],
   complex: ['vector', 'trig'], sequence: ['explog'], derivative: ['quadratic', 'trig'],
-  linecircle: ['quadratic'], ellipse: ['linecircle'], conics2: ['ellipse'],
+  linecircle: ['quadratic', 'pythagoras'], ellipse: ['linecircle'], conics2: ['ellipse'],
   binomial: ['sets'], normal: ['binomial'],
-  incline: ['forces'], projectile: ['kinematics', 'trig'], circular: ['trig'],
+  kinematics: ['linear'], incline: ['forces'], projectile: ['kinematics', 'trig'], circular: ['trig'],
   gravity: ['circular'], energy: ['incline'], momentum: ['energy'],
-  shm: ['trig', 'energy'], wave: ['shm'],
+  shm: ['trig', 'energy'], wave: ['shm', 'sound'],
   coulomb: ['forces'], circuit: ['coulomb'], lorentz: ['circular', 'coulomb'],
   induction: ['lorentz', 'circuit'], ac: ['induction', 'transform'],
-  refraction: ['trig'], lens: ['refraction'], interference: ['wave', 'refraction'],
-  gas: ['energy'], photoelectric: ['energy'], bohr: ['photoelectric']
+  refraction: ['mirror', 'trig'], lens: ['refraction'], interference: ['wave', 'refraction'],
+  gas: ['energy'], photoelectric: ['energy'], bohr: ['photoelectric'],
+  lever: ['forces'] , buoyancy: [], sound: [], mirror: [], linear: [], pythagoras: []
 };
 
 const PATH_ORDER = LEARNING_PATH.flatMap(s => s.items);
@@ -75,6 +104,12 @@ const topicById = id => TOPICS.find(t => t.id === id);
 const stageIndexOf = id => LEARNING_PATH.findIndex(s => s.items.includes(id));
 const tName = t => L(t.title, t.en || t.title);
 const tSub = t => L(t.en || '', t.title);
+/* 当前学段筛选下可见的路径站与专题顺序 */
+function visibleStops() {
+  const s = getStage();
+  return LEARNING_PATH.filter(st => s === 'all' || st.stage === s);
+}
+function visibleOrder() { return visibleStops().flatMap(st => st.items); }
 
 /* ---------- 学习进度 ---------- */
 const DONE_KEY = 'mpv_done_v1';
@@ -96,7 +131,7 @@ const navEl = document.getElementById('nav');
 const sidebar = document.getElementById('sidebar');
 let currentCleanup = null;
 
-/* ---------- 语言切换按钮 ---------- */
+/* ---------- 语言 & 学段切换按钮 ---------- */
 (function buildLangToggle() {
   const box = document.getElementById('lang-toggle');
   if (!box) return;
@@ -106,8 +141,20 @@ let currentCleanup = null;
   en.onclick = () => { if (LANG !== 'en') setLang('en'); };
   box.append(zh, en);
   const foot = document.getElementById('sidebar-foot');
-  if (foot) foot.textContent = L('免费 · 开源 · 适用于高中阶段', 'Free · Open Source · For High School');
+  if (foot) foot.textContent = L('免费 · 开源 · 适用于初高中', 'Free · Open Source · Grades 7–12');
 })();
+
+function buildStageToggle() {
+  const box = document.getElementById('stage-toggle');
+  if (!box) return;
+  box.innerHTML = '';
+  const cur = getStage();
+  [['junior', L('初中', 'Middle')], ['senior', L('高中', 'High')], ['all', L('全部', 'All')]].forEach(([v, lb]) => {
+    const b = h('button', cur === v ? 'on' : null, lb);
+    b.onclick = () => { if (getStage() !== v) setStageFilter(v); };
+    box.appendChild(b);
+  });
+}
 
 /* ---------- 侧边导航 ---------- */
 function buildNav() {
@@ -118,8 +165,10 @@ function buildNav() {
   path.href = '#path'; path.dataset.route = 'path';
   navEl.append(home, path);
   CATEGORIES.forEach(cat => {
+    const items = TOPICS.filter(t => t.cat === cat.id && inStage(t));
+    if (!items.length) return;
     navEl.appendChild(h('div', 'nav-cat', cat.name));
-    TOPICS.filter(t => t.cat === cat.id).forEach(t => {
+    items.forEach(t => {
       const a = h('a', 'nav-item',
         `<span class="ico">${t.icon}</span><span class="nav-txt">${tName(t)}</span><span class="nav-check">✓</span>`);
       a.href = '#' + t.id;
@@ -140,33 +189,41 @@ function refreshNavDone() {
 function renderHome(root) {
   root.innerHTML = '';
   const done = getDone();
-  const total = PATH_ORDER.length;
-  const pct = Math.round(done.size / total * 100);
-  const firstUndone = PATH_ORDER.find(id => !done.has(id)) || PATH_ORDER[0];
+  const order = visibleOrder();
+  const total = order.length;
+  const doneCount = order.filter(id => done.has(id)).length;
+  const pct = total ? Math.round(doneCount / total * 100) : 0;
+  const firstUndone = order.find(id => !done.has(id)) || order[0];
   const hero = h('div', 'home-hero', `
-    <h1>${L('数理可视课堂', 'Math & Physics, Visualized')} <span class="en">${L('Interactive Math & Physics for High School', '交互式高中数学·物理可视化课堂')}</span></h1>
-    <p>${L(`把高中数学与物理的核心原理变成<b>可以动手操作的图形和动画</b>：拖动滑块改变参数，
-    亲眼看到函数曲线如何变化、物体如何运动、光线如何折射。${total} 个交互专题，覆盖高一到高三的主干知识。`,
-    `Every core idea of high-school math and physics turned into <b>graphics and animations you can play with</b>: drag a slider and watch curves reshape, objects move, and light bend — ${total} interactive topics covering Grades 10–12.`)}</p>
+    <h1>${L('数理可视课堂', 'Math & Physics, Visualized')} <span class="en">${L('Interactive Math & Physics · 初中到高三', 'Interactive Math & Physics · Grades 7–12')}</span></h1>
+    <p>${L(`把初高中数学与物理的核心原理变成<b>可以动手操作的图形和动画</b>：拖动滑块改变参数，
+    亲眼看到函数曲线如何变化、物体如何运动、光线如何折射。${TOPICS.length} 个交互专题，覆盖初中到高三的主干知识。`,
+    `Every core idea of middle- and high-school math and physics turned into <b>graphics and animations you can play with</b>: drag a slider and watch curves reshape, objects move, and light bend — ${TOPICS.length} interactive topics covering Grades 7–12.`)}</p>
     <div class="hero-actions">
       <a class="hero-btn primary" href="#path">${L('🗺️ 从零开始 · 查看学习路径', '🗺️ Start from Zero · Learning Path')}</a>
-      <a class="hero-btn" href="#${firstUndone}">▶ ${done.size ? L('继续学习', 'Continue Learning') : L('直接开始第一课', 'Jump into Lesson 1')}</a>
+      <a class="hero-btn" href="#${firstUndone}">▶ ${doneCount ? L('继续学习', 'Continue Learning') : L('直接开始第一课', 'Jump into Lesson 1')}</a>
     </div>
-    ${done.size ? `<div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>${L(`已掌握 ${done.size}/${total} 个专题（${pct}%）`, `${done.size}/${total} topics mastered (${pct}%)`)}</div>` : ''}
+    ${doneCount ? `<div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>${L(`已掌握 ${doneCount}/${total} 个专题（${pct}%）`, `${doneCount}/${total} topics mastered (${pct}%)`)}</div>` : ''}
   `);
   root.appendChild(hero);
   CATEGORIES.forEach(cat => {
+    const items = TOPICS.filter(t => t.cat === cat.id && inStage(t));
+    if (!items.length) return;
     const sec = h('div', 'home-cat',
       `<h2><span class="dot" style="background:${cat.color}"></span>${cat.name} <span style="color:#9ca3af;font-size:13px;font-weight:500">${cat.en}</span></h2>`);
     const grid = h('div', 'card-grid');
-    TOPICS.filter(t => t.cat === cat.id).forEach(t => {
+    items.forEach(t => {
       const si = stageIndexOf(t.id);
       const isDone = done.has(t.id);
+      const jr = stageOfTopic(t) === 'junior';
+      const both = stageOfTopic(t) === 'both';
       const card = h('a', 'card' + (isDone ? ' card-done' : ''), `
         <div class="card-top">
           <span class="ico">${t.icon}</span>
           <span class="card-badges">
-            ${si >= 0 ? `<span class="badge">${L(`第${si + 1}站·${LEARNING_PATH[si].grade}`, `Stop ${si + 1} · ${LEARNING_PATH[si].grade}`)}</span>` : ''}
+            ${si >= 0 ? `<span class="badge">${L(`第${si + 1}站`, `Stop ${si + 1}`)}·${LEARNING_PATH[si].grade}</span>` : ''}
+            ${jr ? `<span class="badge jr-badge">${L('初中', 'MS')}</span>` : ''}
+            ${both ? `<span class="badge jr-badge">${L('初高中通用', 'MS + HS')}</span>` : ''}
             ${isDone ? `<span class="badge done-badge">${L('✓ 已掌握', '✓ Mastered')}</span>` : ''}
           </span>
         </div>
@@ -184,32 +241,39 @@ function renderHome(root) {
 function renderPath(root) {
   root.innerHTML = '';
   const done = getDone();
-  const total = PATH_ORDER.length;
-  const pct = Math.round(done.size / total * 100);
-  const firstUndone = PATH_ORDER.find(id => !done.has(id));
+  const stops = visibleStops();
+  const order = stops.flatMap(st => st.items);
+  const total = order.length;
+  const doneCount = order.filter(id => done.has(id)).length;
+  const pct = total ? Math.round(doneCount / total * 100) : 0;
+  const firstUndone = order.find(id => !done.has(id));
+  const stageNote = { all: L('初中 2 站 + 高中 8 站', '2 middle-school stops + 8 high-school stops'),
+                      junior: L('初中路径（2 站）', 'Middle-school path (2 stops)'),
+                      senior: L('高中路径（8 站）', 'High-school path (8 stops)') }[getStage()];
   root.appendChild(h('div', 'home-hero', `
     <h1>${L('学习路径', 'Learning Path')} <span class="en">${L('A Guided Journey from Zero', '从零开始的系统学习路线')}</span></h1>
-    <p>${L(`按下面 8 站的顺序学习，每一站都建立在前一站之上 —— 与高中教材进度（人教版）大体同步。
-    学完一个专题后，点页面底部的「✓ 标记为已掌握」，进度会保存在这台设备的浏览器里。`,
-    `Follow the 8 stops below in order — each builds on the last, roughly matching a standard high-school sequence.
-    After finishing a topic, click “✓ Mark as mastered” at the bottom of its page; progress is saved in this browser.`)}</p>
+    <p>${L(`按顺序学习（${stageNote}），每一站都建立在前一站之上 —— 与教材进度大体同步。
+    学完一个专题后，点页面底部的「✓ 标记为已掌握」，进度会保存在这台设备的浏览器里。可用侧栏的学段开关只看初中或高中。`,
+    `Follow the stops in order (${stageNote}) — each builds on the last, roughly matching the standard curriculum.
+    After finishing a topic, click "✓ Mark as mastered" at the bottom of its page; progress is saved in this browser. Use the sidebar stage switch to view only middle or high school.`)}</p>
     <div class="hero-progress"><div class="hero-progress-bar"><span style="width:${pct}%"></span></div>
-    ${L(`总进度：${done.size}/${total}（${pct}%）`, `Overall progress: ${done.size}/${total} (${pct}%)`)}</div>
+    ${L(`总进度：${doneCount}/${total}（${pct}%）`, `Overall progress: ${doneCount}/${total} (${pct}%)`)}</div>
     ${firstUndone
       ? `<div class="hero-actions"><a class="hero-btn primary" href="#${firstUndone}">▶ ${L('继续学习：', 'Continue: ')}${tName(topicById(firstUndone))}</a></div>`
       : `<div class="hero-actions"><span class="hero-btn primary">${L('🎉 恭喜！全部专题已掌握', '🎉 Congratulations! All topics mastered')}</span></div>`}
   `));
   const wrap = h('div', 'path-wrap');
-  LEARNING_PATH.forEach((stage, si) => {
-    const doneCount = stage.items.filter(id => done.has(id)).length;
-    const card = h('div', 'path-stage' + (doneCount === stage.items.length ? ' stage-done' : ''));
+  stops.forEach(stage => {
+    const si = LEARNING_PATH.indexOf(stage);
+    const dc = stage.items.filter(id => done.has(id)).length;
+    const card = h('div', 'path-stage' + (dc === stage.items.length ? ' stage-done' : '') + (stage.stage === 'junior' ? ' stage-junior' : ''));
     card.innerHTML = `
       <div class="path-num">${si + 1}</div>
       <div class="path-body">
         <div class="path-head">
           <span class="badge">${stage.grade}</span>
           <h3>${stage.title}</h3>
-          <span class="path-count">${doneCount}/${stage.items.length}</span>
+          <span class="path-count">${dc}/${stage.items.length}</span>
         </div>
         <p class="path-desc">${stage.desc}</p>
         <div class="path-items"></div>
@@ -291,5 +355,6 @@ function route() {
 
 document.getElementById('menu-btn').onclick = () => sidebar.classList.toggle('open');
 window.addEventListener('hashchange', route);
+buildStageToggle();
 buildNav();
 route();

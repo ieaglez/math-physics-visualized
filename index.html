@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>数理可视课堂 · Math &amp; Physics Visualized</title>
-<meta name="description" content="高中数学与物理交互式可视化学习：38 个可调参数的交互专题 + 循序渐进的学习路径，帮助学生直观理解原理和公式。">
+<meta name="description" content="初高中数学与物理交互式可视化学习：可调参数的交互专题 + 循序渐进的学习路径，覆盖初一到高三，帮助学生直观理解原理和公式。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
@@ -21,6 +21,7 @@
       </div>
     </a>
     <div id="lang-toggle"></div>
+    <div id="stage-toggle"></div>
     <nav id="nav"></nav>
     <div class="sidebar-foot" id="sidebar-foot">免费 · 开源 · 适用于高中阶段</div>
   </aside>
@@ -29,6 +30,11 @@
 </div>
 
 <script src="js/utils.js"></script>
+<!-- 数学 · 函数与几何（初中） -->
+<script src="js/topics/math-linear.js"></script>
+<script src="js/topics/math-inverse.js"></script>
+<script src="js/topics/math-linsys.js"></script>
+<script src="js/topics/math-pythagoras.js"></script>
 <!-- 数学 · 函数与几何 -->
 <script src="js/topics/math-sets.js"></script>
 <script src="js/topics/math-quadratic.js"></script>
@@ -47,6 +53,10 @@
 <script src="js/topics/math-solids.js"></script>
 <script src="js/topics/math-binomial.js"></script>
 <script src="js/topics/math-normal.js"></script>
+<!-- 物理 · 力学（初中） -->
+<script src="js/topics/phys-sound.js"></script>
+<script src="js/topics/phys-buoyancy.js"></script>
+<script src="js/topics/phys-lever.js"></script>
 <!-- 物理 · 力学 -->
 <script src="js/topics/phys-kinematics.js"></script>
 <script src="js/topics/phys-forces.js"></script>
@@ -58,6 +68,8 @@
 <script src="js/topics/phys-momentum.js"></script>
 <script src="js/topics/phys-shm.js"></script>
 <script src="js/topics/phys-wave.js"></script>
+<!-- 物理 · 电磁与光学（初中） -->
+<script src="js/topics/phys-mirror.js"></script>
 <!-- 物理 · 电磁与光学 -->
 <script src="js/topics/phys-coulomb.js"></script>
 <script src="js/topics/phys-circuit.js"></script>

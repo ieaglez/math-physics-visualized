@@ -1,7 +1,7 @@
 'use strict';
 /* ===== 力的合成与分解 Force Composition ===== */
 registerTopic({
-  id: 'forces', cat: 'mech', icon: '🪢',
+  id: 'forces', cat: 'mech', icon: '🪢', stage: 'both',
   title: '力的合成与分解', en: 'Force Composition',
   desc: L('两个人拉一个物体，夹角越大越费劲？用平行四边形法则亲手验证。',
           'Two people pulling one object — does a wider angle really waste more effort? Verify with the parallelogram rule.'),
