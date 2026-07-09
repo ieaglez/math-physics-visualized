@@ -68,7 +68,7 @@ const LEARNING_PATH = [
     title: L('三角与向量：旋转的数学', 'Trigonometry & Vectors: The Math of Rotation'),
     desc: L('单位圆是三角函数的家。向量和复数则把"方向"变成可以计算的对象。',
             'The unit circle is home to the trig functions. Vectors and complex numbers turn "direction" into something you can compute with.'),
-    items: ['trig', 'transform', 'triangle', 'vector', 'complex'] },
+    items: ['trig', 'transform', 'trigid', 'triangle', 'vector', 'complex'] },
   { stage: 'senior', grade: L('高一 · 下', 'Grade 10 · Spring'),
     title: L('曲线运动 · 能量 · 动量', 'Curved Motion · Energy · Momentum'),
     desc: L('运动不再是直线：抛体、圆周、天体。再用能量和动量两大守恒律俯瞰全局。',
@@ -78,7 +78,7 @@ const LEARNING_PATH = [
     title: L('几何与代数进阶', 'Advanced Geometry & Algebra'),
     desc: L('立体几何练空间想象；解析几何用代数"算"几何；数列和导数打开高等数学的门。',
             'Solid geometry trains spatial thinking; analytic geometry computes shapes with algebra; sequences and derivatives open the door to higher math.'),
-    items: ['solids', 'linecircle', 'ellipse', 'conics2', 'sequence', 'derivative'] },
+    items: ['solids', 'crosssection', 'linecircle', 'ellipse', 'conics2', 'sequence', 'derivative'] },
   { stage: 'senior', grade: L('高二', 'Grade 11'),
     title: L('电与磁', 'Electricity & Magnetism'),
     desc: L('从静电力到电路，再到磁场和电磁感应 —— 现代文明的全部电力都从这里来。',
@@ -93,7 +93,7 @@ const LEARNING_PATH = [
     title: L('概率统计与近代物理', 'Probability, Statistics & Modern Physics'),
     desc: L('用分布描述随机世界；再走进 20 世纪：气体分子、光量子、原子能级。',
             'Describe randomness with distributions, then step into the 20th century: gas molecules, light quanta, atomic energy levels.'),
-    items: ['binomial', 'normal', 'gas', 'photoelectric', 'bohr'] }
+    items: ['binomial', 'normal', 'gas', 'photoelectric', 'bohr', 'nuclear'] }
 ];
 
 /* 前置知识 */
@@ -120,7 +120,8 @@ const PREREQS = {
   coulomb: ['forces'], circuit: ['coulomb'], lorentz: ['circular', 'coulomb'],
   induction: ['lorentz', 'circuit'], ac: ['induction', 'transform'],
   refraction: ['mirror', 'trig'], lens: ['refraction'], interference: ['wave', 'refraction'],
-  gas: ['energy', 'phase'], photoelectric: ['energy'], bohr: ['photoelectric']
+  gas: ['energy', 'phase'], photoelectric: ['energy'], bohr: ['photoelectric'],
+  trigid: ['trig', 'transform'], crosssection: ['solids'], nuclear: ['bohr']
 };
 
 const PATH_ORDER = LEARNING_PATH.flatMap(s => s.items);
