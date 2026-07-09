@@ -29,16 +29,31 @@ function inStage(t) {
 
 /* ---------- 学习路径：初中 2 站 + 高中 8 站 ---------- */
 const LEARNING_PATH = [
-  { stage: 'junior', grade: L('初中', 'Middle School'),
-    title: L('初中数学：函数与几何的种子', 'Middle-School Math: Seeds of Functions & Geometry'),
-    desc: L('一次函数是所有函数的第一课，勾股定理是几何的第一块基石 —— 高中的一切都从这里长出来。',
-            'The linear function is lesson one of all functions, and the Pythagorean theorem is geometry\'s first cornerstone — everything in high school grows from here.'),
-    items: ['linear', 'inverse', 'linsys', 'pythagoras'] },
-  { stage: 'junior', grade: L('初中', 'Middle School'),
-    title: L('初中物理：声、光、力的初体验', 'Middle-School Physics: First Taste of Sound, Light & Forces'),
-    desc: L('用波形"看见"声音，用光路图理解镜子，用浮力和杠杆感受力的规律。凸透镜成像和欧姆定律见第 8、9 站，初中阶段同样适用。',
-            'See sound as waveforms, understand mirrors through ray diagrams, and feel the rules of force via buoyancy and levers. Lens imaging and Ohm\'s law (stops 8–9) fit middle school too.'),
-    items: ['sound', 'mirror', 'buoyancy', 'lever'] },
+  { stage: 'junior', grade: L('初一 · 初二', 'Grades 7–8'),
+    title: L('初中数学 Ⅰ：数与代数', 'MS Math Ⅰ: Numbers & Algebra'),
+    desc: L('从数轴和负数出发，学会解方程和不等式，再迎来人生第一批函数 —— 一次与反比例。',
+            'Start at the number line and negatives, learn to solve equations and inequalities, then meet your first functions — linear and inverse proportion.'),
+    items: ['numberline', 'equation1', 'inequality', 'linear', 'inverse', 'linsys'] },
+  { stage: 'junior', grade: L('初二 · 初三', 'Grades 8–9'),
+    title: L('初中数学 Ⅱ：几何直观', 'MS Math Ⅱ: Geometric Intuition'),
+    desc: L('平行线、内角和、勾股、相似、圆周角 —— 几何五连招，最后用锐角三角函数量出塔的高度。',
+            'Parallel lines, angle sums, Pythagoras, similarity and inscribed angles — five geometry moves, capped by measuring a tower with right-triangle trig.'),
+    items: ['parallel', 'triangles', 'pythagoras', 'similar', 'circleangle', 'righttrig'] },
+  { stage: 'junior', grade: L('初二 · 初三', 'Grades 8–9'),
+    title: L('初中数学 Ⅲ：数据与概率', 'MS Math Ⅲ: Data & Chance'),
+    desc: L('三种"平均"各有立场，转盘教你频率如何拥抱概率 —— 统计思维从这里萌芽。',
+            'Three "averages" with three agendas, and a spinner showing frequency embracing probability — statistical thinking sprouts here.'),
+    items: ['stats', 'probability'] },
+  { stage: 'junior', grade: L('初二', 'Grade 8'),
+    title: L('初中物理 Ⅰ：运动、力与机械', 'MS Physics Ⅰ: Motion, Forces & Machines'),
+    desc: L('从 v = s/t 到二力平衡，再到压强、浮力、杠杆、滑轮 —— 最后用机械效率算清每一焦耳的账。',
+            'From v = s/t to balanced forces, then pressure, buoyancy, levers and pulleys — closing the books on every joule with efficiency.'),
+    items: ['speed', 'inertia', 'pressure', 'buoyancy', 'lever', 'pulley', 'workjr'] },
+  { stage: 'junior', grade: L('初二 · 初三', 'Grades 8–9'),
+    title: L('初中物理 Ⅱ：声光热电磁', 'MS Physics Ⅱ: Sound, Light, Heat & Electromagnetism'),
+    desc: L('声音的波形、镜子里的虚像、水的"温度缓冲"、保险丝的极限、电磁铁与电动机 —— 初中物理的另一半版图。凸透镜与欧姆定律见高中路径，初中同样适用。',
+            'Waveforms of sound, virtual images in mirrors, water\'s thermal buffering, the fuse\'s limit, electromagnets and motors — the other half of the map. Lenses and Ohm\'s law sit on the HS path but fit here too.'),
+    items: ['sound', 'mirror', 'phase', 'heatcap', 'epower', 'magnet', 'motor'] },
   { stage: 'senior', grade: L('高一 · 上', 'Grade 10 · Fall'),
     title: L('数学起步：从集合到函数', 'Math Foundations: Sets to Functions'),
     desc: L('先学会数学的"语言"（集合），再认识两类最重要的函数 —— 这是后面一切的地基。',
@@ -83,20 +98,29 @@ const LEARNING_PATH = [
 
 /* 前置知识 */
 const PREREQS = {
-  inverse: ['linear'], linsys: ['linear'],
-  quadratic: ['linear'], amgm: ['quadratic'], explog: ['quadratic'],
-  trig: ['quadratic', 'pythagoras'], transform: ['trig'], triangle: ['trig'], vector: ['trig'],
+  /* 初中数学 */
+  equation1: ['numberline'], inequality: ['equation1'],
+  linear: ['equation1'], inverse: ['linear'], linsys: ['linear', 'equation1'],
+  triangles: ['parallel'], similar: ['triangles'], circleangle: ['triangles'],
+  righttrig: ['pythagoras', 'similar'],
+  /* 初中物理 */
+  speed: ['linear'], pulley: ['lever'], workjr: ['pulley', 'lever'],
+  lever: ['forces'], epower: ['circuit'], motor: ['magnet'],
+  /* 高中数学（含初高衔接） */
+  quadratic: ['linear'], amgm: ['quadratic', 'inequality'], explog: ['quadratic'],
+  trig: ['quadratic', 'righttrig'], transform: ['trig'], triangle: ['trig'], vector: ['trig'],
   complex: ['vector', 'trig'], sequence: ['explog'], derivative: ['quadratic', 'trig'],
   linecircle: ['quadratic', 'pythagoras'], ellipse: ['linecircle'], conics2: ['ellipse'],
-  binomial: ['sets'], normal: ['binomial'],
-  kinematics: ['linear'], incline: ['forces'], projectile: ['kinematics', 'trig'], circular: ['trig'],
-  gravity: ['circular'], energy: ['incline'], momentum: ['energy'],
+  binomial: ['sets', 'probability'], normal: ['binomial'],
+  /* 高中物理（含初高衔接） */
+  kinematics: ['speed'], forces: ['inertia'], incline: ['forces'],
+  projectile: ['kinematics', 'trig'], circular: ['trig'],
+  gravity: ['circular'], energy: ['incline', 'workjr'], momentum: ['energy'],
   shm: ['trig', 'energy'], wave: ['shm', 'sound'],
   coulomb: ['forces'], circuit: ['coulomb'], lorentz: ['circular', 'coulomb'],
   induction: ['lorentz', 'circuit'], ac: ['induction', 'transform'],
   refraction: ['mirror', 'trig'], lens: ['refraction'], interference: ['wave', 'refraction'],
-  gas: ['energy'], photoelectric: ['energy'], bohr: ['photoelectric'],
-  lever: ['forces'] , buoyancy: [], sound: [], mirror: [], linear: [], pythagoras: []
+  gas: ['energy', 'phase'], photoelectric: ['energy'], bohr: ['photoelectric']
 };
 
 const PATH_ORDER = LEARNING_PATH.flatMap(s => s.items);
@@ -247,8 +271,8 @@ function renderPath(root) {
   const doneCount = order.filter(id => done.has(id)).length;
   const pct = total ? Math.round(doneCount / total * 100) : 0;
   const firstUndone = order.find(id => !done.has(id));
-  const stageNote = { all: L('初中 2 站 + 高中 8 站', '2 middle-school stops + 8 high-school stops'),
-                      junior: L('初中路径（2 站）', 'Middle-school path (2 stops)'),
+  const stageNote = { all: L('初中 5 站 + 高中 8 站', '5 middle-school stops + 8 high-school stops'),
+                      junior: L('初中路径（5 站）', 'Middle-school path (5 stops)'),
                       senior: L('高中路径（8 站）', 'High-school path (8 stops)') }[getStage()];
   root.appendChild(h('div', 'home-hero', `
     <h1>${L('学习路径', 'Learning Path')} <span class="en">${L('A Guided Journey from Zero', '从零开始的系统学习路线')}</span></h1>
