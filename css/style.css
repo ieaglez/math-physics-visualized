@@ -2,9 +2,15 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "HarmonyOS Sans SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --font-math: "STIX Two Math", "Times New Roman", "Noto Serif SC", "Songti SC", serif;
+  /* 中文一律现代黑体（系统原生优先：PingFang/鸿蒙/MiSans，Web 兜底 Noto Sans SC/雅黑），
+     全站杜绝宋体；拉丁与数字优先 Inter/SF */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  /* 公式：拉丁/符号走衬线数学体（Times 风格），中文与正文同为现代黑体 */
+  --font-math: "STIX Two Math", "Times New Roman", "PingFang SC",
+    "HarmonyOS Sans SC", "MiSans", "Noto Sans SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 
   --bg: #f3f5fb;
   --panel: #ffffff;
