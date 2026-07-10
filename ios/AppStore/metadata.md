@@ -1,7 +1,8 @@
 # App Store 提审资料包 · 数理可视课堂
 
 > 本文件的每一节对应 App Store Connect 里的一个填写项，直接复制粘贴即可。
-> 截图在 `ios/AppStore/screenshots/`（iPhone 6.9″ 与 iPad 13″ 各 6 张，尺寸已按 Apple 规范生成）。
+> 商店页做**中英双语**：主要语言 简体中文 + 添加 English (U.S.) 本地化（§5B）。
+> 截图在 `ios/AppStore/screenshots/`：中文界面与英文界面各 12 张（iPhone 6.9″ + iPad 13″），尺寸已按 Apple 规范生成。
 
 ---
 
@@ -32,6 +33,8 @@
 | 用户访问权限 | 完全访问权限 |
 
 > 若名称"数理可视课堂"被占用，备选：**数理可视课堂·初高中数理实验室**（≤30 字符即可）。
+
+**添加英文本地化**：App 创建后，在 App Store Connect 任意信息页右上角的语言下拉菜单 → **添加语言 → English (U.S.)**。名称/副标题/描述/关键词/截图都是**按语言分别填写**的：中文页用 §5A，英文页用 §5B。海外用户看到英文商店页，国内用户看到中文页。
 
 ---
 
@@ -71,7 +74,7 @@ https://ieaglez.github.io/math-physics-visualized/privacy.html
 
 ---
 
-## 5. 版本信息（1.0 版本页）
+## 5A. 版本信息 — 简体中文（主要语言）
 
 ### 5.1 副标题（Subtitle，≤30 字符）
 
@@ -144,14 +147,77 @@ https://ieaglez.github.io/math-physics-visualized/
 
 ---
 
-## 6. 截图上传（本仓库已生成）
+## 5B. 版本信息 — English (U.S.) 本地化
 
-| App Store Connect 槽位 | 用哪个文件夹 | 尺寸 |
-|---|---|---|
-| iPhone 6.9″ 显示屏 | `screenshots/iphone-6.9/`（6 张，按文件名顺序上传） | 1320×2868 |
-| iPad 13″ 显示屏 | `screenshots/ipad-13/`（6 张，按文件名顺序上传） | 2064×2752 |
+### 名称（Name，≤30 字符）
 
-> 只需这两组：其余 iPhone/iPad 尺寸 Apple 会自动沿用缩放。顺序建议：首页 → 学习路径 → 三角函数 → 抛体运动 → 正方体截面 → 电路。
+```
+Math & Physics Visualized
+```
+
+### 副标题（Subtitle，≤30 字符）
+
+```
+Math & physics you can touch
+```
+
+### 推广文本（Promotional Text，≤170 字符）
+
+```
+Drag a slider — watch projectiles fly, pendulums swing, and a cube reveal its hexagonal cross-section. 69 interactive labs for grades 7-12. Free, offline, no ads.
+```
+
+### 描述（Description）
+
+```
+Math & Physics Visualized turns middle- and high-school math and physics into hands-on interactive experiments. We believe formulas aren't for memorizing — they're for seeing.
+
+Every topic is a live lab: drag sliders to change parameters and watch graphs, motion and simulations respond in real time, with clear explanations in both English and Chinese.
+
+69 TOPICS COVERING GRADES 7-12
+• Middle-school math (14): the number line, linear equations as a balance, linear & inverse functions, systems of equations, angles with parallel lines, triangle angle sum, the Pythagorean theorem, similar triangles, inscribed angles, basic trigonometry, statistics & probability, and more
+• Middle-school physics (14): speed, balanced forces & inertia, sound, pressure, density & buoyancy, levers, pulleys, mechanical efficiency, plane mirrors, changes of state, specific heat, electric power & safety, electromagnets, motors & generators, and more
+• High-school math (19): sets, quadratic functions, the AM-GM inequality, exponents & logarithms, the unit circle, trig identities, solving triangles, vectors, sequences, complex numbers, derivatives & tangent lines, lines & circles, conic sections, solid geometry & cross-sections, binomial and normal distributions, and more
+• High-school physics (22): kinematics, force composition, projectile & circular motion, gravitation & satellites, energy conservation, momentum & collisions, simple harmonic motion, waves, Coulomb's law, circuits, the Lorentz force, electromagnetic induction, AC & transformers, refraction & total internal reflection, lenses, double-slit interference, ideal gases, the photoelectric effect, hydrogen energy levels, radioactive decay, and more
+
+WHY STUDENTS LOVE IT
+• A guided learning path: 13 stations from beginner to advanced, with prerequisites marked
+• Progress check-offs stored on your device — no account needed
+• Fully bilingual: switch between English and Chinese anytime
+• Filter by level: middle school / high school / all
+• 100% offline: everything ships inside the app
+• Truly free: no ads, no in-app purchases, no sign-up, no data collection
+
+For students in grades 7-12, teachers who want live classroom demos, and anyone curious about how math and physics actually work.
+```
+
+### 关键词（Keywords，≤100 字符）
+
+```
+physics,math,algebra,geometry,trigonometry,calculus,simulation,STEM,school,interactive,formula
+```
+
+### 版本新增内容（What's New，更新时用）
+
+```
+• Fixed panel jitter during animation playback
+• New topics added — tell us what you'd like to learn next on the support page
+```
+
+> 技术支持网址 / 营销网址 / 版权与中文页相同（§5A 5.5–5.7）。
+
+---
+
+## 6. 截图上传(本仓库已生成)
+
+| 语言页 | App Store Connect 槽位 | 用哪个文件夹 | 尺寸 |
+|---|---|---|---|
+| 简体中文 | iPhone 6.9″ 显示屏 | `screenshots/iphone-6.9/`（6 张） | 1320×2868 |
+| 简体中文 | iPad 13″ 显示屏 | `screenshots/ipad-13/`（6 张） | 2064×2752 |
+| English (U.S.) | iPhone 6.9″ 显示屏 | `screenshots/iphone-6.9-en/`（6 张） | 1320×2868 |
+| English (U.S.) | iPad 13″ 显示屏 | `screenshots/ipad-13-en/`（6 张） | 2064×2752 |
+
+> 每组只需这两种尺寸：其余 iPhone/iPad 尺寸 Apple 会自动沿用缩放。按文件名顺序上传：首页 → 学习路径 → 三角函数 → 抛体运动 → 正方体截面 → 电路。中英文截图内容一一对应，界面语言不同。
 
 ---
 

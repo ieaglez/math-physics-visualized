@@ -27,15 +27,25 @@ struct WebView: UIViewRepresentable {
     func updateUIView(_ uiView: WKWebView, context: Context) {}
 
     final class Coordinator: NSObject, WKNavigationDelegate {
-        /// 截图/调试直达入口：`simctl launch ... -page trig -autoplay 1`
+        /// 截图/调试直达入口：`simctl launch ... -lang en -page trig -autoplay 1`
         /// 正常用户启动时无这些参数，行为不变。
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             let ud = UserDefaults.standard
-            guard let page = ud.string(forKey: "page"), !page.isEmpty else { return }
-            var js = "location.hash='#\(page)';"
+            let page = ud.string(forKey: "page") ?? ""
+            let lang = ud.string(forKey: "lang") ?? ""
+            guard !page.isEmpty || !lang.isEmpty else { return }
+            var inner = ""
+            if !page.isEmpty { inner += "location.hash='#\(page)';" }
             if ud.bool(forKey: "autoplay") {
-                js += "setTimeout(()=>{const b=[...document.querySelectorAll('.btn-row .btn')]"
-                js += ".find(x=>/播放|Play/.test(x.textContent));b&&b.click();},600);"
+                inner += "setTimeout(()=>{const b=[...document.querySelectorAll('.btn-row .btn')]"
+                inner += ".find(x=>/播放|Play/.test(x.textContent));b&&b.click();},600);"
+            }
+            var js = inner
+            if !lang.isEmpty {
+                // 语言不符时写入并重载；重载后 didFinish 再次触发，走 else 分支应用 page/autoplay
+                js = "if(localStorage.getItem('mpv_lang')!=='\(lang)')"
+                js += "{localStorage.setItem('mpv_lang','\(lang)');location.reload();}"
+                js += "else{\(inner)}"
             }
             webView.evaluateJavaScript(js, completionHandler: nil)
         }
