@@ -109,6 +109,8 @@ body {
 .topic-head h1 .en {
   font-size: 14px; font-weight: 600; color: var(--ink-soft);
   margin-left: 12px; letter-spacing: .01em;
+  /* 整体换行：避免副标题跟着大标题从词中间被劈开 */
+  display: inline-block;
 }
 .topic-head .tagline { color: var(--ink-soft); margin-top: 5px; font-size: 14.5px; }
 
@@ -130,9 +132,16 @@ body {
 }
 .formula-hero-body {
   font-family: var(--font-math); font-size: 20px; color: #221d56;
-  overflow-x: auto; white-space: nowrap; line-height: 1.5; padding: 4px 0;
+  /* 块间换行（.fpart 块内 nowrap）；单块超宽时仍可横向滚动兜底。
+     min-width:0 让本元素在 flex 内可收缩，滚动才真正生效而不是撑宽页面 */
+  overflow-x: auto; white-space: normal; line-height: 1.6; padding: 4px 0;
+  min-width: 0;
 }
 .formula-hero-body::-webkit-scrollbar { height: 0; }
+.fpart { white-space: nowrap; margin: 0 .22em; }
+.fpart:first-child { margin-left: 0; }
+.fpart.fwrap { white-space: normal; }
+.fsep { color: #9b98d9; margin: 0 .12em; }
 
 /* 实验区 */
 .lab { display: flex; gap: 20px; align-items: stretch; margin: 20px 0 28px; }
@@ -160,7 +169,7 @@ body {
   border: 1px solid #e3e3f8; border-radius: 13px;
   padding: 10px 12px; margin-bottom: 6px;
   font-family: var(--font-math); font-size: 14.5px; color: #2a2465;
-  text-align: center; overflow-x: auto; white-space: nowrap; line-height: 1.6;
+  text-align: center; overflow-x: auto; white-space: normal; line-height: 1.7;
 }
 .panel-formula::-webkit-scrollbar { height: 0; }
 

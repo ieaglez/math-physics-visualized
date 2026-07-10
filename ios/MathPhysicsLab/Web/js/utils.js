@@ -40,23 +40,35 @@ function fmtN(v, d = 2) {
 }
 const DEG = Math.PI / 180;
 
+/* 公式按分隔符（全角空格/独立 ·）切块：块内不换行、块间可换行，
+   窄屏上整块折行而不是被横向截断；超长单块仍由 overflow-x 滚动兜底 */
+function formulaHTML(f) {
+  return f.split(/　+|( · )/).filter(t => t && t.trim() !== '').map(t => {
+    if (t.trim() === '·') return '<span class="fsep">·</span>';
+    // 长块（多为文字性表述/长等式）窄屏下允许内部换行，短数学块保持整块不折
+    const plain = t.replace(/<[^>]*>/g, '');
+    return `<span class="${plain.length > 16 ? 'fpart fwrap' : 'fpart'}">${t}</span>`;
+  }).join(' ');
+}
+
 /* ---------- 页面骨架：标题 + 实验区(画布/控制台) + 讲解区 ---------- */
 function topicPage(root, { title, en, tagline, formula, explainHTML }) {
   root.innerHTML = '';
   // 英文模式下主标题用英文、副标题反标中文术语
   const tMain = L(title, en || title), tSub = L(en || '', title);
+  const fHTML = formula ? formulaHTML(formula) : '';
   const head = h('div', 'topic-head',
     `<h1>${tMain} <span class="en">${tSub}</span></h1>` +
     (tagline ? `<p class="tagline">${tagline}</p>` : ''));
   if (formula) {
     head.appendChild(h('div', 'formula-hero',
       `<span class="formula-hero-label">${L('核心公式 KEY FORMULA', 'KEY FORMULA 核心公式')}</span>` +
-      `<div class="formula-hero-body">${formula}</div>`));
+      `<div class="formula-hero-body">${fHTML}</div>`));
   }
   const lab = h('div', 'lab');
   const canvasBox = h('div', 'canvas-box');
   const panel = h('aside', 'panel',
-    (formula ? `<div class="panel-formula">${formula}</div>` : '') +
+    (fHTML ? `<div class="panel-formula">${fHTML}</div>` : '') +
     `<div class="panel-title">${L('⚙️ 参数控制台 PARAMETERS', '⚙️ PARAMETERS 参数控制台')}</div>`);
   lab.append(canvasBox, panel);
   root.append(head, lab);
