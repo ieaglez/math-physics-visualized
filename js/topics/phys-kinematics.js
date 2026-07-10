@@ -117,13 +117,21 @@ registerTopic({
         const range = Math.max(hi - lo, 1);
         const GX = tt => g.x0 + (tt / T) * (gW - 10);
         const GY = y => gTop + gH - 18 - ((y - lo) / range) * (gH - 40);
+        // 图框：把每张小图各自装起来
+        ctx.fillStyle = '#fbfcff'; ctx.strokeStyle = '#e7eaf3'; ctx.lineWidth = 1;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(g.x0 - 12, gTop - 12, gW + 8, gH + 12, 10);
+        else ctx.rect(g.x0 - 12, gTop - 12, gW + 8, gH + 12);
+        ctx.fill(); ctx.stroke();
         ctx.strokeStyle = C.axis; ctx.lineWidth = 1.2;
         ctx.beginPath(); ctx.moveTo(g.x0, GY(0)); ctx.lineTo(g.x0 + gW - 6, GY(0)); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(GX(0), gTop + 4); ctx.lineTo(GX(0), gTop + gH - 12); ctx.stroke();
         ctx.fillStyle = C.soft; ctx.font = '11px sans-serif';
-        ctx.fillText('t/s', g.x0 + gW - 24, GY(0) - 6);
-        ctx.fillText(g.name, g.x0 + 8, gTop + 2);
-        [2, 4, 6, 8, 10].forEach(tt => { ctx.fillText(tt, GX(tt) - 3, GY(0) + 13); });
+        ctx.textAlign = 'right'; ctx.fillText('t/s', g.x0 + gW - 8, GY(0) - 6);
+        ctx.textAlign = 'left'; ctx.fillText(g.name, g.x0 + 8, gTop + 2);
+        ctx.textAlign = 'center';
+        [2, 4, 6, 8, 10].forEach(tt => { ctx.fillText(tt, GX(tt), GY(0) + 13); });
+        ctx.textAlign = 'left';
         // v–t 面积着色（0~t）
         if (g.f === vOf && t > 0.05) {
           ctx.fillStyle = 'rgba(220,38,38,.12)';
@@ -131,12 +139,23 @@ registerTopic({
           for (let tt = 0; tt <= t; tt += 0.1) ctx.lineTo(GX(tt), GY(vOf(tt)));
           ctx.lineTo(GX(t), GY(0)); ctx.closePath(); ctx.fill();
         }
-        ctx.strokeStyle = g.color; ctx.lineWidth = 2.5; ctx.beginPath();
+        // 全程虚线预览（浅），实线只画到当前时刻 —— 真正的"同步绘制"
+        ctx.save();
+        ctx.globalAlpha = 0.28; ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = g.color; ctx.lineWidth = 1.6; ctx.beginPath();
         for (let tt = 0; tt <= T; tt += 0.08) {
           const X = GX(tt), Y = GY(g.f(tt));
           tt === 0 ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y);
         }
         ctx.stroke();
+        ctx.restore();
+        if (t > 0.02) {
+          ctx.strokeStyle = g.color; ctx.lineWidth = 2.5; ctx.beginPath();
+          ctx.moveTo(GX(0), GY(g.f(0)));
+          for (let tt = 0.08; tt < t; tt += 0.08) ctx.lineTo(GX(tt), GY(g.f(tt)));
+          ctx.lineTo(GX(t), GY(g.f(t)));
+          ctx.stroke();
+        }
         ctx.fillStyle = g.color;
         ctx.beginPath(); ctx.arc(GX(t), GY(g.f(t)), 5.5, 0, Math.PI * 2); ctx.fill();
       });

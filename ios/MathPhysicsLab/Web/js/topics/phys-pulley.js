@@ -84,29 +84,40 @@ registerTopic({
       };
       const fixedY = topY + 34;
       const movY = loadY - 34;
-      // 绳段：在定滑轮与动滑轮间画 n 段承重绳（等间距排布）
+      // 承重绳：前 n−1 段一律锚在天花板、垂到动滑轮；
+      // 最后一段从动滑轮（n=1 时直接从重物）引出，搭过定滑轮下到手
       const spread = 26;
       const x0 = cx - (n - 1) * spread / 2;
+      const lastX = x0 + (n - 1) * spread;
+      const barY = movY - R - 9;                 // 吊杆：承重绳都系在杆上，杆吊着动滑轮
+      const botY = n > 1 ? barY : loadY;
       ctx.strokeStyle = '#b45309'; ctx.lineWidth = 2.4;
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < n - 1; i++) {
         const x = x0 + i * spread;
+        ctx.beginPath(); ctx.moveTo(x, topY); ctx.lineTo(x, barY); ctx.stroke();
+      }
+      if (n > 1) {
+        ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx, barY); ctx.lineTo(cx, movY); ctx.stroke();
+        ctx.fillStyle = '#64748b';
         ctx.beginPath();
-        ctx.moveTo(x, i === 0 && n > 1 ? topY : fixedY);
-        ctx.lineTo(x, movY);
-        ctx.stroke();
+        if (ctx.roundRect) ctx.roundRect(x0 - 8, barY - 2.5, (n - 1) * spread + 16, 5, 2.5);
+        else ctx.rect(x0 - 8, barY - 2.5, (n - 1) * spread + 16, 5);
+        ctx.fill();
       }
       // 定滑轮吊架 + 定滑轮（引出拉力方向）
       ctx.strokeStyle = '#64748b'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(cx + 120, topY); ctx.lineTo(cx + 120, fixedY - R); ctx.stroke();
       pulley(cx + 120, fixedY, '#dbe3ff');
-      // 从动滑轮最右绳段引到定滑轮再向下到手
+      // 出绳路径（教科书画法）：斜拉到定滑轮左缘 → 绕轮顶半圈 → 垂直下到手
+      // 手的下移 = n×重物升高（真实比例），画布放不下时截断
       ctx.strokeStyle = '#b45309'; ctx.lineWidth = 2.4;
       ctx.beginPath();
-      ctx.moveTo(x0 + (n - 1) * spread, movY);
-      ctx.lineTo(x0 + (n - 1) * spread, fixedY - R);
-      ctx.arc(cx + 120, fixedY, R, Math.PI, Math.PI * 0.5, true);
-      const handY = fixedY + 30 + hLift * scale * n * 0.5;
-      ctx.moveTo(cx + 120 + R, fixedY);
+      ctx.moveTo(lastX, botY);
+      ctx.lineTo(cx + 120 - R, fixedY);
+      ctx.arc(cx + 120, fixedY, R, Math.PI, Math.PI * 2);
+      const sTravel = Math.min(hLift * scale * n, H - fixedY - 135);
+      const handY = fixedY + 30 + sTravel;
       ctx.lineTo(cx + 120 + R, handY);
       ctx.stroke();
       // 手 + 拉力箭头

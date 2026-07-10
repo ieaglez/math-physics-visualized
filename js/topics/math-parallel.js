@@ -70,11 +70,10 @@ registerTopic({
       ctx.fillStyle = '#4547c9'; ctx.font = 'bold 13px sans-serif';
       ctx.fillText('a', 46, y1 - 10);
       ctx.fillText('b', 46, y2 - 10);
-      // 截线：过两交点 P1(上) P2(下)，方向角 th（与水平正方向夹角）
-      const dx = Math.cos(th), dy = -Math.sin(th);
-      const x1 = cx - (y2 - y1) / 2 * (dx / dy) * -1; // 让截线穿过屏幕中部：取 P1 使 P2 对称
-      const P1 = [cx - (y2 - y1) / 2 / Math.tan(th), y1];
-      const P2 = [cx + (y2 - y1) / 2 / Math.tan(th), y2];
+      // 截线：过两交点 P1(上) P2(下)，向右上倾斜 th（与角弧的方向约定一致）
+      // P1 在上线偏右、P2 在下线偏左，直线方向 = (cos th, −sin th)
+      const P1 = [cx + (y2 - y1) / 2 / Math.tan(th), y1];
+      const P2 = [cx - (y2 - y1) / 2 / Math.tan(th), y2];
       const ext = 150;
       ctx.strokeStyle = '#ea580c'; ctx.lineWidth = 3;
       ctx.beginPath();
